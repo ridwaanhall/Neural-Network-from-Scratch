@@ -41,13 +41,12 @@ def minimal_test():
         model.add_layer(DenseLayer(784, 64, activation=ReLU(), weight_init='xavier'))
         model.add_layer(DenseLayer(64, 10, activation=Softmax(), weight_init='xavier'))
         print("✓ Model created")
-        
-        # Create trainer
+          # Create trainer
         trainer = Trainer(
             model=model,
-            loss_function=CrossEntropyLoss(),
-            learning_rate=0.01,
-            batch_size=32
+            patience=5,
+            save_best=True,
+            verbose=1
         )
         print("✓ Trainer created")
         
@@ -57,7 +56,7 @@ def minimal_test():
             X_train_small, y_train_small,
             X_test_small, y_test_small,  # Using test as validation for simplicity
             epochs=5,
-            verbose=True
+            batch_size=32
         )
         print("✓ Training completed")
         
