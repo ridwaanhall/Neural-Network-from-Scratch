@@ -148,15 +148,17 @@ def evaluate_model(model, X_test, y_test, class_names=None):
     
     return metrics, predictions
 
-def save_model_and_results(model, trainer, metrics, config):
+def save_model_and_results(model, trainer, metrics, config, timestamp=None):
     """Save trained model and results"""
     logger = logging.getLogger(__name__)
     
     # Create models directory
     os.makedirs('models', exist_ok=True)
     
-    # Save model with timestamp
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    # Use provided timestamp or generate new one
+    if timestamp is None:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    
     model_path = f'models/mnist_model_{timestamp}.pkl'
     
     model.save_model(model_path)
@@ -177,15 +179,21 @@ def save_model_and_results(model, trainer, metrics, config):
     logger.info(f"Results saved to: {results_path}")
     return model_path, results_path
 
-def create_visualizations(trainer, metrics, X_test, y_test, predictions, save_plots=True):
+def create_visualizations(trainer, metrics, X_test, y_test, predictions, save_plots=True, timestamp=None):
     """Create and optionally save visualization plots"""
     logger = logging.getLogger(__name__)
     logger.info("Creating visualizations...")
+    
+    # Use provided timestamp or generate new one
+    if timestamp is None:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    
     try:
         # Plot training history if available
         if hasattr(trainer.model, 'history') and trainer.model.history:
-            plot_training_history(trainer.model.history, save_path='logs/training_history.png' if save_plots else None)
-            logger.info("Training history plot saved!")
+            training_history_path = f'logs/training_history_{timestamp}.png' if save_plots else None
+            plot_training_history(trainer.model.history, save_path=training_history_path)
+            logger.info(f"Training history plot saved to: {training_history_path}")
         else:
             logger.warning("No training history available for plotting")
         
@@ -198,16 +206,18 @@ def create_visualizations(trainer, metrics, X_test, y_test, predictions, save_pl
         from src.utils.metrics import calculate_metrics
         metrics = calculate_metrics(true_classes, predicted_classes, class_names)
         
+        confusion_matrix_path = f'logs/confusion_matrix_{timestamp}.png' if save_plots else None
         plot_confusion_matrix(
             metrics['confusion_matrix'],
             class_names=class_names,
-            save_path='logs/confusion_matrix.png' if save_plots else None
+            save_path=confusion_matrix_path
         )
         
         # Plot sample predictions
+        sample_predictions_path = f'logs/sample_predictions_{timestamp}.png' if save_plots else None
         plot_sample_predictions(
             X_test, y_test, predictions,
-            save_path='logs/sample_predictions.png' if save_plots else None
+            save_path=sample_predictions_path
         )
         
         logger.info("Visualizations created successfully!")
@@ -277,19 +287,21 @@ def main():
         # Step 3: Train model
         logger.info("Step 3: Training the model...")
         trainer = train_model(model, X_train, y_train, X_val, y_val, config)
-        
-        # Step 4: Evaluate model
+          # Step 4: Evaluate model
         logger.info("Step 4: Evaluating the model...")
         metrics, predictions = evaluate_model(model, X_test, y_test)
         
+        # Generate timestamp for consistent file naming
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        
         # Step 5: Save model and results
         logger.info("Step 5: Saving model and results...")
-        model_path, results_path = save_model_and_results(model, trainer, metrics, config)
+        model_path, results_path = save_model_and_results(model, trainer, metrics, config, timestamp)
         
         # Step 6: Create visualizations
         if not args.no_plots:
             logger.info("Step 6: Creating visualizations...")
-            create_visualizations(trainer, metrics, X_test, y_test, predictions, save_plots=True)
+            create_visualizations(trainer, metrics, X_test, y_test, predictions, save_plots=True, timestamp=timestamp)
         
         # Final summary
         logger.info("="*60)
