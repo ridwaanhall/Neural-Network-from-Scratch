@@ -315,13 +315,15 @@ def find_latest_model():
     if not os.path.exists(models_dir):
         return None
     
-    # Look for model files
+    # Check for the default model name first
+    default_model = os.path.join(models_dir, 'mnist_nn_model.pkl')
+    if os.path.exists(default_model):
+        return default_model
+    
+    # If default model doesn't exist, look for timestamped models
     model_files = [f for f in os.listdir(models_dir) if f.startswith('mnist_model_') and f.endswith('.pkl')]
     
     if not model_files:
-        # Try the old naming convention
-        if os.path.exists(os.path.join(models_dir, 'mnist_nn_model.pkl')):
-            return os.path.join(models_dir, 'mnist_nn_model.pkl')
         return None
     
     # Sort by modification time to get the latest
