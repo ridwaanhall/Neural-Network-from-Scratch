@@ -55,10 +55,10 @@ def demonstrate_components():
         test_data = np.random.randn(5, 3)
         dense_output = dense.forward(test_data)
         print(f"  Dense Layer:   Input {test_data.shape} → Output {dense_output.shape}")
-        
-        # Dropout layer
+          # Dropout layer
         dropout = DropoutLayer(0.5)
-        dropout_output = dropout.forward(test_data, training=True)
+        dropout.set_training(True)  # Set training mode
+        dropout_output = dropout.forward(test_data)
         print(f"  Dropout Layer: Input {test_data.shape} → Output {dropout_output.shape}")
         
         print_section("3. Loss Functions")
@@ -163,16 +163,15 @@ def demonstrate_mini_training():
         model = NeuralNetwork()
         model.add_layer(DenseLayer(784, 32, activation=ReLU(), weight_init='xavier'))
         model.add_layer(DenseLayer(32, 10, activation=Softmax(), weight_init='xavier'))
-        print(f"  Model architecture: 784 → 32 → 10")
-        print(f"  Total parameters: {sum(layer.weights.size + layer.biases.size for layer in model.layers if hasattr(layer, 'weights'))}")
         
+        print(f"  Model architecture: 784 → 32 → 10")
+        print(f"  Total parameters: {sum(layer.weights.size + layer.bias.size for layer in model.layers if hasattr(layer, 'weights'))}")
         print_section("Training (3 epochs)")
         trainer = Trainer(
             model=model,
-            loss_function=CrossEntropyLoss(),
-            learning_rate=0.01,
-            batch_size=16,
-            momentum=0.9
+            patience=5,  # Early stopping patience
+            save_best=True,
+            verbose=1
         )
         
         # Quick training
@@ -180,7 +179,8 @@ def demonstrate_mini_training():
             X_train_mini, y_train_mini,
             X_test_mini, y_test_mini,
             epochs=3,
-            verbose=True
+            batch_size=16,
+            momentum=0.9
         )
         
         print_section("Results")
