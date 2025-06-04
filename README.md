@@ -26,13 +26,13 @@ A complete, professional neural network implementation built entirely from scrat
 pip install -r requirements.txt
 
 # 2. Quick test (recommended first run)
-python main.py --quick_test
+python apps/main.py --quick_test
 
 # 3. Full training
-python main.py
+python apps/main.py
 
 # 4. Launch interactive GUI
-python play_app.py
+python apps/play_app.py
 ```
 
 ## 📊 Performance Results
@@ -130,31 +130,31 @@ HuberLoss()           # Robust loss function
 
 ```bash
 # Basic training
-python main.py
+python apps/main.py
 
 # Quick test with reduced dataset
-python main.py --quick_test
+python apps/main.py --quick_test
 
 # Deep architecture for maximum accuracy
-python main.py --architecture deep
+python apps/main.py --architecture deep
 
 # Custom parameters
-python main.py --epochs 100 --batch_size 64 --learning_rate 0.01
+python apps/main.py --epochs 100 --batch_size 64 --learning_rate 0.01
 
 # Skip plot generation
-python main.py --no_plots
+python apps/main.py --no_plots
 
 # Standalone scripts
-python train.py    # Training only
-python test.py     # Evaluation only
-python demo.py     # Component demonstration
+python apps/train.py    # Training only
+python apps/test.py     # Evaluation only
+python apps/demo.py     # Component demonstration
 ```
 
 ### Interactive GUI Application
 
 ```bash
 # Launch drawing interface for digit recognition
-python play_app.py
+python apps/play_app.py
 ```
 
 ### Programmatic Interface
@@ -239,25 +239,25 @@ This implementation demonstrates:
 2. **Quick Verification**:
 
    ```bash
-   python minimal_test.py
+   python test/minimal_test.py
    ```
 
 3. **Run Demo**:
 
    ```bash
-   python demo.py
+   python apps/demo.py
    ```
 
 4. **Train Your First Model**:
 
    ```bash
-   python main.py --quick_test
+   python apps/main.py --quick_test
    ```
 
 5. **Full Training**:
 
    ```bash
-   python main.py
+   python apps/main.py
    ```
 
 ## 🎯 Project Status
