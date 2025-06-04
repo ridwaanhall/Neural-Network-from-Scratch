@@ -302,7 +302,13 @@ class NeuralNetwork:
         else:
             true_classes = y
         
-        return confusion_matrix(true_classes, predictions, self.output_size)
+        # Determine number of classes if output_size is None
+        if self.output_size is None:
+            num_classes = max(np.max(true_classes), np.max(predictions)) + 1
+        else:
+            num_classes = self.output_size
+        
+        return confusion_matrix(true_classes, predictions, num_classes)
     
     def save_model(self, filepath):
         """
