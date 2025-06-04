@@ -26,13 +26,13 @@ A complete, professional neural network implementation built entirely from scrat
 pip install -r requirements.txt
 
 # 2. Quick test (recommended first run)
-python main.py --quick_test
+python apps/main.py --quick_test
 
 # 3. Full training
-python main.py
+python apps/main.py
 
 # 4. Launch interactive GUI
-python play_app.py
+python apps/play_app.py
 ```
 
 ## 📊 Performance Results
@@ -66,13 +66,19 @@ Neural-Network-from-Scratch/
 │       ├── __init__.py
 │       ├── metrics.py                  # Evaluation metrics
 │       └── visualization.py            # Professional plotting
-├── 📁 Applications/
+├── 📁 apps/                            # Main Apps
 │   ├── main.py                         # Complete pipeline
 │   ├── train.py                        # Standalone training
 │   ├── test.py                         # Model evaluation
 │   ├── demo.py                         # Component demo
-│   ├── play_app.py                     # Interactive GUI
-│   └── minimal_test.py                 # Quick verification
+│   └── play_app.py                     # Interactive GUI
+├── 📁 debug/
+│   ├── debug_model.py                  # Examine saved model structure
+│   └── debug_test.py                   # Isolate the error in test.py
+├── 📁 test/
+│   ├── minimal_test.py                 # Verify the NN works with MNIST data
+│   ├── test_basic.py                   # Verify the NN implementation works
+│   └── test_model_loading.py           # Check model loading functionality
 ├── 📁 data/                            # MNIST dataset
 ├── 📁 models/                          # Saved models
 ├── 📁 logs/                            # Training logs & plots
@@ -107,7 +113,7 @@ LeakyReLU()     # Parameterized ReLU
 CrossEntropyLoss()    # Multiclass classification
 MeanSquaredError()    # Regression tasks
 BinaryCrossEntropy()  # Binary classification  
-HuberLoss()          # Robust loss function
+HuberLoss()           # Robust loss function
 ```
 
 ### Training Features
@@ -124,31 +130,31 @@ HuberLoss()          # Robust loss function
 
 ```bash
 # Basic training
-python main.py
+python apps/main.py
 
 # Quick test with reduced dataset
-python main.py --quick_test
+python apps/main.py --quick_test
 
 # Deep architecture for maximum accuracy
-python main.py --architecture deep
+python apps/main.py --architecture deep
 
 # Custom parameters
-python main.py --epochs 100 --batch_size 64 --learning_rate 0.01
+python apps/main.py --epochs 100 --batch_size 64 --learning_rate 0.01
 
 # Skip plot generation
-python main.py --no_plots
+python apps/main.py --no_plots
 
 # Standalone scripts
-python train.py    # Training only
-python test.py     # Evaluation only
-python demo.py     # Component demonstration
+python apps/train.py    # Training only
+python apps/test.py     # Evaluation only
+python apps/demo.py     # Component demonstration
 ```
 
 ### Interactive GUI Application
 
 ```bash
 # Launch drawing interface for digit recognition
-python play_app.py
+python apps/play_app.py
 ```
 
 ### Programmatic Interface
@@ -202,7 +208,7 @@ numpy>=1.21.0              # Core mathematical operations
 torch>=1.9.0               # MNIST dataset downloading only
 torchvision>=0.10.0        # Dataset utilities
 matplotlib>=3.3.0          # Visualization (optional)
-tkinter                    # GUI applications (standard library)
+tkinter                    # GUI apps (standard library)
 ```
 
 ## 🏆 Educational Value
@@ -233,25 +239,25 @@ This implementation demonstrates:
 2. **Quick Verification**:
 
    ```bash
-   python minimal_test.py
+   python test/minimal_test.py
    ```
 
 3. **Run Demo**:
 
    ```bash
-   python demo.py
+   python apps/demo.py
    ```
 
 4. **Train Your First Model**:
 
    ```bash
-   python main.py --quick_test
+   python apps/main.py --quick_test
    ```
 
 5. **Full Training**:
 
    ```bash
-   python main.py
+   python apps/main.py
    ```
 
 ## 🎯 Project Status
