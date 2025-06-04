@@ -66,7 +66,7 @@ Neural-Network-from-Scratch/
 │       ├── __init__.py
 │       ├── metrics.py                  # Evaluation metrics
 │       └── visualization.py            # Professional plotting
-├── 📁 apps/
+├── 📁 apps/                            # Main Apps
 │   ├── main.py                         # Complete pipeline
 │   ├── train.py                        # Standalone training
 │   ├── test.py                         # Model evaluation
