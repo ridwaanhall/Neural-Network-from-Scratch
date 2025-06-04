@@ -238,10 +238,10 @@ class LeakyReLU(ActivationFunction):
 # Factory function to get activation function by name
 def get_activation_function(name):
     """
-    Factory function to get activation function by name.
+    Factory function to get activation function by name or return existing instance.
     
     Args:
-        name (str): Name of the activation function
+        name (str or ActivationFunction): Name of the activation function or an instance
         
     Returns:
         ActivationFunction: Instance of the requested activation function
@@ -249,6 +249,14 @@ def get_activation_function(name):
     Raises:
         ValueError: If activation function name is not recognized
     """
+    # If already an activation function instance, return it directly
+    if hasattr(name, 'forward') and hasattr(name, 'backward'):
+        return name
+    
+    # If it's a string, create the appropriate instance
+    if not isinstance(name, str):
+        raise ValueError(f"Expected string or activation function instance, got {type(name)}")
+    
     activations = {
         'relu': ReLU(),
         'sigmoid': Sigmoid(),
