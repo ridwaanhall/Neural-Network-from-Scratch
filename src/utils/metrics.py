@@ -389,3 +389,39 @@ class MetricsTracker:
         y_pred = np.array(self.y_pred)
         
         return classification_report(y_true, y_pred, self.num_classes, self.class_names)
+
+
+def calculate_metrics(y_true, y_pred, class_names=None):
+    """
+    Calculate comprehensive metrics for classification.
+    
+    Args:
+        y_true (np.ndarray): True labels (class indices)
+        y_pred (np.ndarray): Predicted labels (class indices)
+        class_names (list): Optional list of class names
+        
+    Returns:
+        dict: Dictionary containing accuracy, precision, recall, f1_score, and confusion_matrix
+    """
+    # Determine number of classes
+    num_classes = max(np.max(y_true), np.max(y_pred)) + 1
+    
+    # Calculate individual metrics
+    accuracy = accuracy_score(y_true, y_pred)
+    precision = precision_score(y_true, y_pred, num_classes, average='macro')
+    recall = recall_score(y_true, y_pred, num_classes, average='macro')
+    f1 = f1_score(y_true, y_pred, num_classes, average='macro')
+    cm = confusion_matrix(y_true, y_pred, num_classes)
+    
+    # Create comprehensive metrics dictionary
+    metrics = {
+        'accuracy': accuracy,
+        'precision': precision,
+        'recall': recall,
+        'f1_score': f1,
+        'confusion_matrix': cm,
+        'num_classes': num_classes,
+        'class_names': class_names if class_names else [str(i) for i in range(num_classes)]
+    }
+    
+    return metrics
