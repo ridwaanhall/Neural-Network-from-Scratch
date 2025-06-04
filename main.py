@@ -186,14 +186,18 @@ def create_visualizations(trainer, metrics, X_test, y_test, predictions, save_pl
         # Plot training history if available
         if hasattr(trainer, 'history') and trainer.history:
             plot_training_history(trainer.history, save_path='logs/training_history.png' if save_plots else None)
-        
-        # Plot confusion matrix
+          # Calculate metrics and plot confusion matrix
         true_classes = y_test.argmax(axis=1)
         predicted_classes = predictions.argmax(axis=1)
         class_names = [str(i) for i in range(10)]  # MNIST digit classes
         
+        # Calculate comprehensive metrics including confusion matrix
+        from src.utils.metrics import calculate_metrics
+        metrics = calculate_metrics(true_classes, predicted_classes, class_names)
+        
         plot_confusion_matrix(
-            true_classes, predicted_classes, class_names,
+            metrics['confusion_matrix'],
+            class_names=class_names,
             save_path='logs/confusion_matrix.png' if save_plots else None
         )
         
