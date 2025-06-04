@@ -1,7 +1,7 @@
 # Security Policy
 
 [![Security](https://img.shields.io/badge/Security-Maintained-green.svg)](/)
-[![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://python.org)
+[![Python](https://img.shields.io/badge/Python-3.12%2B-blue.svg)](https://python.org)
 [![Dependencies](https://img.shields.io/badge/Dependencies-Minimal-brightgreen.svg)](/)
 
 ## Project Security Overview
