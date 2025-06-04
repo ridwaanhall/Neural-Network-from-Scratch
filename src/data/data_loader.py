@@ -126,8 +126,7 @@ class MNISTDataLoader:
             labels = np.frombuffer(f.read(), dtype=np.uint8)
             
         return labels
-    
-    def load_data(self, normalize=True, flatten=True, one_hot=True):
+    def load_data(self, normalize=True, flatten=True, one_hot=True, validation_split=None):
         """
         Load and preprocess MNIST dataset.
         
@@ -135,9 +134,11 @@ class MNISTDataLoader:
             normalize (bool): Whether to normalize pixel values to [0, 1]
             flatten (bool): Whether to flatten images to 1D vectors
             one_hot (bool): Whether to one-hot encode labels
+            validation_split (float, optional): Fraction of training data to use for validation
             
         Returns:
-            tuple: (X_train, y_train, X_test, y_test)
+            tuple: If validation_split is None: (X_train, y_train, X_test, y_test)
+                   If validation_split is provided: ((X_train, y_train), (X_val, y_val), (X_test, y_test))
         """
         # Download data if necessary
         self.download_mnist()
@@ -166,8 +167,14 @@ class MNISTDataLoader:
         if one_hot:
             y_train = self.to_one_hot(y_train, 10)
             y_test = self.to_one_hot(y_test, 10)
-        
-        return X_train, y_train, X_test, y_test
+          # Split training data into train/validation if requested
+        if validation_split is not None:
+            X_train_split, X_val, y_train_split, y_val = DataPreprocessor.train_validation_split(
+                X_train, y_train, validation_split=validation_split, shuffle=True, random_seed=42
+            )
+            return (X_train_split, y_train_split), (X_val, y_val), (X_test, y_test)
+        else:
+            return X_train, y_train, X_test, y_test
     
     @staticmethod
     def to_one_hot(labels, num_classes):
