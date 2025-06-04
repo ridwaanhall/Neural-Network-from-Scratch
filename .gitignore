@@ -148,3 +148,8 @@ cython_debug/
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+# custom files
+*.bat
+*.ps1
+*.sh
