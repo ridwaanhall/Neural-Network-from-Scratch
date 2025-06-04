@@ -29,13 +29,8 @@ def load_model(model_path):
     if not os.path.exists(model_path):
         raise FileNotFoundError(f"Model file not found: {model_path}")
     
-    # Create a dummy model to load parameters into
-    model = NeuralNetwork(
-        input_size=784,
-        hidden_layers=[256, 128, 64],
-        output_size=10
-    )
-    
+    # Create a new model instance and load the saved parameters
+    model = NeuralNetwork()
     model.load_model(model_path)
     return model
 
@@ -54,27 +49,100 @@ def evaluate_model_comprehensive(model, X_test, y_test, class_names=None):
         dict: Comprehensive evaluation results
     """
     print("Performing comprehensive model evaluation...")
+      # Get predictions
+    print("Making predictions on test data...")
+    try:
+        predictions_proba = model.predict(X_test)
+        print(f"✓ Predictions completed - shape: {predictions_proba.shape}")
+    except Exception as e:
+        print(f"❌ Error making predictions: {e}")
+        raise
     
-    # Get predictions
-    predictions_proba = model.predict(X_test)
-    predictions_classes = model.predict_classes(X_test)
+    try:
+        predictions_classes = model.predict_classes(X_test)
+        print(f"✓ Class predictions completed - shape: {predictions_classes.shape}")
+    except Exception as e:
+        print(f"❌ Error making class predictions: {e}")
+        raise
     
     # Convert one-hot to class indices if necessary
+    print("Converting labels...")
     if y_test.ndim > 1 and y_test.shape[1] > 1:
         true_classes = np.argmax(y_test, axis=1)
+        print(f"✓ Converted one-hot labels to class indices - shape: {true_classes.shape}")
     else:
         true_classes = y_test
+        print(f"✓ Using labels as-is - shape: {true_classes.shape}")
     
     # Calculate basic metrics
-    test_loss, test_accuracy = model.evaluate(X_test, y_test)
-    
-    # Get confusion matrix
-    confusion_mat = model.get_confusion_matrix(X_test, y_test)
+    print("Calculating basic metrics...")
+    try:
+        test_loss, test_accuracy = model.evaluate(X_test, y_test)
+        print(f"✓ Basic metrics calculated - Loss: {test_loss:.4f}, Accuracy: {test_accuracy:.4f}")
+    except Exception as e:
+        print(f"❌ Error calculating basic metrics: {e}")
+        raise
+      # Get confusion matrix
+    print("Calculating confusion matrix...")
+    try:
+        confusion_mat = model.get_confusion_matrix(X_test, y_test)
+        print(f"✓ Confusion matrix calculated - shape: {confusion_mat.shape}")
+    except Exception as e:
+        print(f"❌ Error calculating confusion matrix: {e}")
+        raise
     
     # Use metrics tracker for detailed metrics
-    metrics_tracker = MetricsTracker(num_classes=10, class_names=class_names)
-    metrics_tracker.update(true_classes, predictions_classes, predictions_proba)
-    detailed_metrics = metrics_tracker.compute_metrics()
+    num_classes = 10  # MNIST has 10 digit classes
+    
+    # Ensure class_names is properly initialized
+    if class_names is None:
+        class_names = [str(i) for i in range(num_classes)]
+    
+    print("Setting up MetricsTracker...")
+    try:
+        # Check data types and shapes before MetricsTracker
+        print(f"Data validation:")
+        print(f"  num_classes: {num_classes}")
+        print(f"  true_classes: type={type(true_classes)}, shape={true_classes.shape}, dtype={true_classes.dtype}")
+        print(f"  predictions_classes: type={type(predictions_classes)}, shape={predictions_classes.shape}, dtype={predictions_classes.dtype}")
+        print(f"  predictions_proba: type={type(predictions_proba)}, shape={predictions_proba.shape}, dtype={predictions_proba.dtype}")
+        print(f"  class_names: {class_names}")
+        
+        # Check for any NaN or infinite values
+        if np.any(np.isnan(predictions_proba)):
+            print("⚠️  Warning: NaN values found in predictions_proba")
+        if np.any(np.isinf(predictions_proba)):
+            print("⚠️  Warning: Infinite values found in predictions_proba")
+        
+        # Check value ranges
+        print(f"  true_classes range: {np.min(true_classes)} to {np.max(true_classes)}")
+        print(f"  predictions_classes range: {np.min(predictions_classes)} to {np.max(predictions_classes)}")
+        print(f"  predictions_proba range: {np.min(predictions_proba):.6f} to {np.max(predictions_proba):.6f}")
+        
+        metrics_tracker = MetricsTracker(num_classes=num_classes, class_names=class_names)
+        print("✓ MetricsTracker created successfully")
+        
+        print("Updating MetricsTracker...")
+        metrics_tracker.update(true_classes, predictions_classes, predictions_proba)
+        print("✓ MetricsTracker updated successfully")
+        
+        print("Computing detailed metrics...")
+        detailed_metrics = metrics_tracker.compute_metrics()
+        print("✓ Detailed metrics computed successfully")
+        
+    except Exception as e:
+        print(f"❌ Error in MetricsTracker processing: {e}")
+        import traceback
+        traceback.print_exc()
+        # Fallback to basic metrics
+        detailed_metrics = {
+            'precision_macro': 0.0,
+            'recall_macro': 0.0,
+            'f1_macro': 0.0,
+            'precision_weighted': 0.0,
+            'recall_weighted': 0.0,
+            'f1_weighted': 0.0
+        }
     
     # Calculate per-class accuracy
     per_class_accuracy = np.diag(confusion_mat) / np.sum(confusion_mat, axis=1)
@@ -241,6 +309,26 @@ def analyze_errors(results, X_test, class_names=None, num_examples=5):
               f"Confidence: {confidence:.3f}")
 
 
+def find_latest_model():
+    """Find the most recent model file in the models directory."""
+    models_dir = 'models'
+    if not os.path.exists(models_dir):
+        return None
+    
+    # Look for model files
+    model_files = [f for f in os.listdir(models_dir) if f.startswith('mnist_model_') and f.endswith('.pkl')]
+    
+    if not model_files:
+        # Try the old naming convention
+        if os.path.exists(os.path.join(models_dir, 'mnist_nn_model.pkl')):
+            return os.path.join(models_dir, 'mnist_nn_model.pkl')
+        return None
+    
+    # Sort by modification time to get the latest
+    model_files.sort(key=lambda x: os.path.getmtime(os.path.join(models_dir, x)), reverse=True)
+    return os.path.join(models_dir, model_files[0])
+
+
 def main():
     """Main testing function."""
     print("=" * 80)
@@ -250,21 +338,27 @@ def main():
     print()
     
     # Configuration
-    model_path = 'models/mnist_nn_model.pkl'
+    model_path = find_latest_model()
+    if model_path is None:
+        print("❌ No trained model found in models/ directory.")
+        print("Please train a model first using: python main.py or python train.py")
+        return
+    
     data_dir = 'data'
     class_names = [str(i) for i in range(10)]  # MNIST digit names
-    
-    # Step 1: Load the trained model
+      # Step 1: Load the trained model
     print("Step 1: Loading trained model...")
     print("-" * 50)
     
+    print(f"Found model: {model_path}")
+    
     try:
         model = load_model(model_path)
-        print(f"Model loaded successfully from: {model_path}")
+        print(f"✓ Model loaded successfully from: {model_path}")
         model.summary()
         print()
     except Exception as e:
-        print(f"Error loading model: {e}")
+        print(f"❌ Error loading model: {e}")
         print("Please make sure you have trained a model using train.py first.")
         return
     
