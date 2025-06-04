@@ -17,18 +17,15 @@ Date: June 04, 2025
 """
 
 import tkinter as tk
-from tkinter import ttk, messagebox, filedialog
+from tkinter import ttk, messagebox
 import numpy as np
 import os
 import pickle
-from PIL import Image, ImageDraw, ImageTk
+from PIL import Image, ImageDraw
 import glob
-from datetime import datetime
 
 # Import our neural network components
 from src.models.neural_network import NeuralNetwork
-from src.models.layers import DenseLayer, DropoutLayer
-from src.models.activations import ReLU, Sigmoid, Softmax
 
 
 class DigitRecognitionApp:
