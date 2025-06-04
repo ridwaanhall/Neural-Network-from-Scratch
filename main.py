@@ -21,7 +21,6 @@ from src.models.neural_network import NeuralNetwork
 from src.models.layers import DenseLayer, DropoutLayer
 from src.models.activations import ReLU, Sigmoid, Softmax
 from src.training.trainer import Trainer
-from src.training.loss_functions import CrossEntropyLoss
 from src.utils.visualization import plot_training_history, plot_confusion_matrix, plot_sample_predictions
 from src.utils.metrics import calculate_metrics
 
@@ -96,24 +95,23 @@ def train_model(model, X_train, y_train, X_val, y_val, config):
     """
     logger = logging.getLogger(__name__)
     logger.info("Starting model training...")
-    
-    # Initialize trainer
+      # Initialize trainer
     trainer = Trainer(
         model=model,
-        loss_function=CrossEntropyLoss(),
-        learning_rate=config['learning_rate'],
-        batch_size=config['batch_size'],
-        momentum=config.get('momentum', 0.9),
-        early_stopping_patience=config.get('early_stopping_patience', 10),
-        lr_schedule=config.get('lr_schedule', 'plateau')
+        patience=config.get('early_stopping_patience', 10),
+        min_delta=1e-4,
+        lr_scheduler={'type': config.get('lr_schedule', 'plateau')},
+        save_best=True,
+        verbose=1
     )
-    
-    # Train the model
+      # Train the model
     history = trainer.train(
         X_train, y_train,
         X_val, y_val,
         epochs=config['epochs'],
-        verbose=True
+        batch_size=config['batch_size'],
+        momentum=config.get('momentum', 0.9),
+        shuffle=True
     )
     
     logger.info("Training completed!")
