@@ -154,3 +154,4 @@ Desktop.ini
 *.ps1
 *.sh
 raw/
+*.pkl
