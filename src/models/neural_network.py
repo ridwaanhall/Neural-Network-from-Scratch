@@ -336,7 +336,6 @@ class NeuralNetwork:
             pickle.dump(model_data, f)
         
         print(f"Model saved to {filepath}")
-    
     def load_model(self, filepath):
         """
         Load a trained model from a file.
@@ -359,13 +358,62 @@ class NeuralNetwork:
         self.learning_rate = model_data['learning_rate']
         self.history = model_data['history']
         
-        # Rebuild network and restore parameters
-        self._build_network('relu', 'softmax', 'xavier')
-        parameters = model_data['parameters']
+        # Clear existing layers
+        self.layers = []
+        # Check if this model was built using constructor (has architecture info)
+        # or using add_layer approach (architecture values are None)
+        if (self.input_size is not None and self.hidden_layers is not None 
+            and self.output_size is not None):
+            # Model was built using constructor - rebuild using _build_network
+            self._build_network('relu', 'softmax', 'xavier')
+        else:
+            # Model was built using add_layer approach - need to reconstruct layers
+            # We'll create the layers from the saved parameters
+            parameters = model_data['parameters']
+            
+            # Reconstruct layers based on saved parameters
+            for i, param in enumerate(parameters):
+                if param is None:
+                    # This is a dropout layer
+                    dropout_layer = DropoutLayer(dropout_rate=self.dropout_rate)
+                    self.layers.append(dropout_layer)
+                else:
+                    # This is a dense layer - reconstruct from parameters
+                    weights = param['weights']
+                    bias = param.get('bias')  # Use get() since bias might not exist
+                    input_size, output_size = weights.shape
+                    
+                    # Determine activation based on layer position and check if it's the last dense layer
+                    # Count how many dense layers we have total
+                    total_dense_layers = sum(1 for p in parameters if p is not None)
+                    current_dense_layer = sum(1 for j in range(i+1) for p in [parameters[j]] if p is not None)
+                    
+                    if current_dense_layer == total_dense_layers:
+                        # Last dense layer - use softmax
+                        from .activations import Softmax
+                        activation = Softmax()
+                    else:
+                        # Hidden layer - use ReLU
+                        from .activations import ReLU
+                        activation = ReLU()
+                    
+                    # Create dense layer
+                    layer = DenseLayer(input_size, output_size, activation=activation)
+                    self.layers.append(layer)
         
-        for i, layer in enumerate(self.layers):
-            if hasattr(layer, 'set_params') and parameters[i] is not None:
-                layer.set_params(parameters[i])
+        # Restore layer parameters
+        parameters = model_data['parameters']
+        param_idx = 0
+        
+        for layer in self.layers:
+            if hasattr(layer, 'set_params'):
+                # Find the next non-None parameter
+                while param_idx < len(parameters) and parameters[param_idx] is None:
+                    param_idx += 1
+                
+                if param_idx < len(parameters):
+                    layer.set_params(parameters[param_idx])
+                    param_idx += 1
         
         print(f"Model loaded from {filepath}")
     
