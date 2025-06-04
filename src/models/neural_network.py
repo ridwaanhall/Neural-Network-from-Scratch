@@ -153,7 +153,6 @@ class NeuralNetwork:
         for layer in reversed(self.layers):
             grad = layer.backward(grad)
         return grad
-    
     def update_weights(self, momentum=0.9):
         """
         Update network weights using computed gradients.
@@ -162,7 +161,8 @@ class NeuralNetwork:
             momentum (float): Momentum coefficient for optimization
         """
         for layer in self.layers:
-            if hasattr(layer, 'update_weights'):
+            # Only update weights for layers that have trainable parameters
+            if hasattr(layer, 'weights') and hasattr(layer, 'update_weights'):
                 layer.update_weights(self.learning_rate, momentum)
     
     def set_training(self, training):
