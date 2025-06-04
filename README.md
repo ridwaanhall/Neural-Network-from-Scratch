@@ -66,13 +66,19 @@ Neural-Network-from-Scratch/
 │       ├── __init__.py
 │       ├── metrics.py                  # Evaluation metrics
 │       └── visualization.py            # Professional plotting
-├── 📁 Applications/
+├── 📁 apps/
 │   ├── main.py                         # Complete pipeline
 │   ├── train.py                        # Standalone training
 │   ├── test.py                         # Model evaluation
 │   ├── demo.py                         # Component demo
-│   ├── play_app.py                     # Interactive GUI
-│   └── minimal_test.py                 # Quick verification
+│   └── play_app.py                     # Interactive GUI
+├── 📁 debug/
+│   ├── debug_model.py                  # Examine saved model structure
+│   └── debug_test.py                   # Isolate the error in test.py
+├── 📁 test/
+│   ├── minimal_test.py                 # Verify the NN works with MNIST data
+│   ├── test_basic.py                   # Verify the NN implementation works
+│   └── test_model_loading.py           # Check model loading functionality
 ├── 📁 data/                            # MNIST dataset
 ├── 📁 models/                          # Saved models
 ├── 📁 logs/                            # Training logs & plots
@@ -107,7 +113,7 @@ LeakyReLU()     # Parameterized ReLU
 CrossEntropyLoss()    # Multiclass classification
 MeanSquaredError()    # Regression tasks
 BinaryCrossEntropy()  # Binary classification  
-HuberLoss()          # Robust loss function
+HuberLoss()           # Robust loss function
 ```
 
 ### Training Features
@@ -202,7 +208,7 @@ numpy>=1.21.0              # Core mathematical operations
 torch>=1.9.0               # MNIST dataset downloading only
 torchvision>=0.10.0        # Dataset utilities
 matplotlib>=3.3.0          # Visualization (optional)
-tkinter                    # GUI applications (standard library)
+tkinter                    # GUI apps (standard library)
 ```
 
 ## 🏆 Educational Value
