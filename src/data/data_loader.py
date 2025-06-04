@@ -20,9 +20,9 @@ class MNISTDataLoader:
     Downloads the MNIST dataset from the original source if not already present,
     and provides utilities for loading and preprocessing the data.
     """
-    
-    # MNIST dataset URLs
-    BASE_URL = "http://yann.lecun.com/exdb/mnist/"
+      # MNIST dataset URLs - using GitHub mirror as primary source
+    BASE_URL = "https://github.com/zalandoresearch/fashion-mnist/raw/master/data/mnist/"
+    FALLBACK_URL = "https://storage.googleapis.com/cvdf-datasets/mnist/"
     FILES = {
         'train_images': 'train-images-idx3-ubyte.gz',
         'train_labels': 'train-labels-idx1-ubyte.gz',
@@ -44,34 +44,47 @@ class MNISTDataLoader:
         """Create data directory if it doesn't exist."""
         if not os.path.exists(self.data_dir):
             os.makedirs(self.data_dir)
-    
     def download_file(self, filename):
         """
-        Download a single MNIST file.
+        Download a single MNIST file with fallback URLs.
         
         Args:
             filename (str): Name of the file to download
         """
-        url = urljoin(self.BASE_URL, filename)
         filepath = os.path.join(self.data_dir, filename)
         
         if os.path.exists(filepath):
             print(f"{filename} already exists, skipping download.")
             return
         
+        # Try multiple URLs
+        urls_to_try = [
+            urljoin(self.FALLBACK_URL, filename),  # Google Cloud Storage
+            f"https://ossci-datasets.s3.amazonaws.com/mnist/{filename}",  # AWS S3
+            f"https://www.di.ens.fr/~lelarge/MNIST/{filename}",  # ENS Paris
+        ]
+        
         print(f"Downloading {filename}...")
-        try:
-            response = requests.get(url, stream=True)
-            response.raise_for_status()
-            
-            with open(filepath, 'wb') as f:
-                for chunk in response.iter_content(chunk_size=8192):
-                    f.write(chunk)
-            
-            print(f"Downloaded {filename} successfully.")
-        except Exception as e:
-            print(f"Error downloading {filename}: {e}")
-            raise
+        
+        for url in urls_to_try:
+            try:
+                print(f"Trying {url}...")
+                response = requests.get(url, stream=True, timeout=30)
+                response.raise_for_status()
+                
+                with open(filepath, 'wb') as f:
+                    for chunk in response.iter_content(chunk_size=8192):
+                        f.write(chunk)
+                
+                print(f"Downloaded {filename} successfully from {url}")
+                return
+                
+            except Exception as e:
+                print(f"Failed to download from {url}: {e}")
+                continue
+        
+        # If all URLs fail, raise an error
+        raise Exception(f"Failed to download {filename} from all available sources")
     
     def download_mnist(self):
         """Download all MNIST files if they don't exist."""
