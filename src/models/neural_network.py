@@ -21,18 +21,21 @@ class NeuralNetwork:
     This class provides a complete neural network with customizable architecture,
     training algorithms, and evaluation metrics.
     """
-    
-    def __init__(self, input_size, hidden_layers, output_size, 
+    def __init__(self, input_size=None, hidden_layers=None, output_size=None, 
                  activation='relu', output_activation='softmax',
                  loss='cross_entropy', learning_rate=0.001,
                  weight_init='xavier', use_dropout=False, dropout_rate=0.5):
         """
         Initialize the neural network.
         
+        Can be used in two ways:
+        1. Constructor-based: Pass all parameters to build the network immediately
+        2. Manual building: Create empty network and use add_layer() method
+        
         Args:
-            input_size (int): Number of input features
-            hidden_layers (list): List of hidden layer sizes
-            output_size (int): Number of output classes
+            input_size (int, optional): Number of input features
+            hidden_layers (list, optional): List of hidden layer sizes
+            output_size (int, optional): Number of output classes
             activation (str): Activation function for hidden layers
             output_activation (str): Activation function for output layer
             loss (str): Loss function name
@@ -42,15 +45,21 @@ class NeuralNetwork:
             dropout_rate (float): Dropout rate if dropout is enabled
         """
         self.input_size = input_size
-        self.hidden_layers = hidden_layers
+        self.hidden_layers = hidden_layers or []
         self.output_size = output_size
         self.learning_rate = learning_rate
         self.use_dropout = use_dropout
         self.dropout_rate = dropout_rate
+        self.activation = activation
+        self.output_activation = output_activation
+        self.weight_init = weight_init
         
-        # Build network architecture
+        # Initialize layers list
         self.layers = []
-        self._build_network(activation, output_activation, weight_init)
+        
+        # Build network if parameters provided
+        if input_size is not None and output_size is not None:
+            self._build_network(activation, output_activation, weight_init)
         
         # Initialize loss function
         self.loss_function = get_loss_function(loss)
@@ -95,8 +104,7 @@ class NeuralNetwork:
                 self.layers.append(dropout_layer)
             
             prev_size = layer_size
-        
-        # Add output layer
+          # Add output layer
         output_layer = DenseLayer(
             input_size=prev_size,
             output_size=self.output_size,
@@ -104,6 +112,17 @@ class NeuralNetwork:
             weight_init=weight_init
         )
         self.layers.append(output_layer)
+    
+    def add_layer(self, layer):
+        """
+        Add a layer to the network.
+        
+        This method allows building networks layer by layer for more flexibility.
+        
+        Args:
+            layer: A layer object (DenseLayer, DropoutLayer, etc.)
+        """
+        self.layers.append(layer)
     
     def forward(self, x):
         """
