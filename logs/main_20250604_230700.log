@@ -1,0 +1,32 @@
+2025-06-04 23:07:00,805 - INFO - ============================================================
+2025-06-04 23:07:00,805 - INFO - MNIST Neural Network from Scratch - Starting Pipeline
+2025-06-04 23:07:00,805 - INFO - ============================================================
+2025-06-04 23:07:00,805 - INFO - Configuration: {'architecture': 'default', 'epochs': 50, 'batch_size': 128, 'learning_rate': 0.001, 'momentum': 0.9, 'early_stopping_patience': 10, 'lr_schedule': 'plateau'}
+2025-06-04 23:07:00,805 - INFO - Step 1: Loading MNIST dataset...
+2025-06-04 23:07:21,052 - INFO - Data loaded - Train: (48000, 784), Val: (12000, 784), Test: (10000, 784)
+2025-06-04 23:07:21,052 - INFO - Step 2: Creating default neural network model...
+2025-06-04 23:07:21,067 - INFO - Model created with 5 layers
+2025-06-04 23:07:21,067 - INFO - Step 3: Training the model...
+2025-06-04 23:07:21,067 - INFO - Starting model training...
+2025-06-04 23:14:59,928 - INFO - Training completed!
+2025-06-04 23:14:59,928 - INFO - Step 4: Evaluating the model...
+2025-06-04 23:14:59,928 - INFO - Evaluating model on test data...
+2025-06-04 23:15:00,491 - INFO - Test Accuracy: 0.9671
+2025-06-04 23:15:00,491 - INFO - Test Precision: 0.9669
+2025-06-04 23:15:00,491 - INFO - Test Recall: 0.9669
+2025-06-04 23:15:00,491 - INFO - Test F1-Score: 0.9669
+2025-06-04 23:15:00,491 - INFO - Step 5: Saving model and results...
+2025-06-04 23:15:00,507 - INFO - Model saved to: models/mnist_model_20250604_231500.pkl
+2025-06-04 23:15:00,515 - INFO - Results saved to: models/results_20250604_231500.pkl
+2025-06-04 23:15:00,532 - INFO - Step 6: Creating visualizations...
+2025-06-04 23:15:00,582 - INFO - Creating visualizations...
+2025-06-04 23:15:08,714 - INFO - Training history plot saved to: logs/training_history_20250604_231500.png
+2025-06-04 23:15:30,525 - INFO - Visualizations created successfully!
+2025-06-04 23:15:30,698 - INFO - ============================================================
+2025-06-04 23:15:30,881 - INFO - PIPELINE COMPLETED SUCCESSFULLY!
+2025-06-04 23:15:30,997 - INFO - ============================================================
+2025-06-04 23:15:31,042 - INFO - Final Test Accuracy: 0.9671
+2025-06-04 23:15:31,145 - INFO - Model saved to: models/mnist_model_20250604_231500.pkl
+2025-06-04 23:15:31,237 - INFO - Results saved to: models/results_20250604_231500.pkl
+2025-06-04 23:15:31,317 - INFO - Check the 'logs' folder for visualizations and detailed logs
+2025-06-04 23:15:31,444 - INFO - ============================================================
