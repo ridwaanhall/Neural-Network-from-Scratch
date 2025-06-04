@@ -12,8 +12,8 @@ Features:
 - Real-time prediction with confidence scores
 - Clear and predict buttons
 
-Author: Neural Network from Scratch Project
-Date: 2025
+Author: Ridwan Halim (ridwaanhall)
+Date: June 04, 2025
 """
 
 import tkinter as tk

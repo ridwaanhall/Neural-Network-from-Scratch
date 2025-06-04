@@ -6,8 +6,8 @@ Main execution script for MNIST Neural Network from Scratch
 This script provides a complete end-to-end pipeline demonstration of the neural network
 implementation. It includes data loading, model training, evaluation, and visualization.
 
-Author: Neural Network from Scratch Project
-Date: 2025
+Author: Ridwan Halim (ridwaanhall)
+Date: June 04, 2025
 """
 
 import os
