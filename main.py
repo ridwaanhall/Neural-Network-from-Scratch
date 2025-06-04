@@ -181,12 +181,15 @@ def create_visualizations(trainer, metrics, X_test, y_test, predictions, save_pl
     """Create and optionally save visualization plots"""
     logger = logging.getLogger(__name__)
     logger.info("Creating visualizations...")
-    
     try:
         # Plot training history if available
-        if hasattr(trainer, 'history') and trainer.history:
-            plot_training_history(trainer.history, save_path='logs/training_history.png' if save_plots else None)
-          # Calculate metrics and plot confusion matrix
+        if hasattr(trainer.model, 'history') and trainer.model.history:
+            plot_training_history(trainer.model.history, save_path='logs/training_history.png' if save_plots else None)
+            logger.info("Training history plot saved!")
+        else:
+            logger.warning("No training history available for plotting")
+        
+        # Calculate metrics and plot confusion matrix
         true_classes = y_test.argmax(axis=1)
         predicted_classes = predictions.argmax(axis=1)
         class_names = [str(i) for i in range(10)]  # MNIST digit classes
