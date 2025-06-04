@@ -2,33 +2,33 @@
 Data Loading and Preprocessing Module
 
 This module handles downloading, loading, and preprocessing of the MNIST dataset.
+Uses PyTorch for reliable MNIST dataset downloading, then converts to numpy arrays.
 Includes utilities for data normalization, one-hot encoding, and train/validation splits.
 """
 
 import numpy as np
-import gzip
 import pickle
 import os
-import requests
-from urllib.parse import urljoin
+try:
+    import torch
+    import torchvision
+    import torchvision.transforms as transforms
+    PYTORCH_AVAILABLE = True
+except ImportError:
+    PYTORCH_AVAILABLE = False
+    print("Warning: PyTorch not available. Falling back to manual download.")
+    import gzip
+    import requests
+    from urllib.parse import urljoin
 
 
 class MNISTDataLoader:
     """
-    MNIST dataset loader with automatic downloading and preprocessing.
+    MNIST dataset loader using PyTorch for reliable downloading.
     
-    Downloads the MNIST dataset from the original source if not already present,
-    and provides utilities for loading and preprocessing the data.
+    Downloads the MNIST dataset using PyTorch's torchvision, then converts
+    to numpy arrays for use with our neural network implementation.
     """
-      # MNIST dataset URLs - using GitHub mirror as primary source
-    BASE_URL = "https://github.com/zalandoresearch/fashion-mnist/raw/master/data/mnist/"
-    FALLBACK_URL = "https://storage.googleapis.com/cvdf-datasets/mnist/"
-    FILES = {
-        'train_images': 'train-images-idx3-ubyte.gz',
-        'train_labels': 'train-labels-idx1-ubyte.gz',
-        'test_images': 't10k-images-idx3-ubyte.gz',
-        'test_labels': 't10k-labels-idx1-ubyte.gz'
-    }
     
     def __init__(self, data_dir="data"):
         """
@@ -39,106 +39,76 @@ class MNISTDataLoader:
         """
         self.data_dir = data_dir
         self.ensure_data_dir()
+        
+        if not PYTORCH_AVAILABLE:
+            print("Warning: PyTorch not available. Please install with: pip install torch torchvision")
     
     def ensure_data_dir(self):
         """Create data directory if it doesn't exist."""
         if not os.path.exists(self.data_dir):
             os.makedirs(self.data_dir)
-    def download_file(self, filename):
-        """
-        Download a single MNIST file with fallback URLs.
-        
-        Args:
-            filename (str): Name of the file to download
-        """
-        filepath = os.path.join(self.data_dir, filename)
-        
-        if os.path.exists(filepath):
-            print(f"{filename} already exists, skipping download.")
-            return
-        
-        # Try multiple URLs
-        urls_to_try = [
-            urljoin(self.FALLBACK_URL, filename),  # Google Cloud Storage
-            f"https://ossci-datasets.s3.amazonaws.com/mnist/{filename}",  # AWS S3
-            f"https://www.di.ens.fr/~lelarge/MNIST/{filename}",  # ENS Paris
-        ]
-        
-        print(f"Downloading {filename}...")
-        
-        for url in urls_to_try:
-            try:
-                print(f"Trying {url}...")
-                response = requests.get(url, stream=True, timeout=30)
-                response.raise_for_status()
-                
-                with open(filepath, 'wb') as f:
-                    for chunk in response.iter_content(chunk_size=8192):
-                        f.write(chunk)
-                
-                print(f"Downloaded {filename} successfully from {url}")
-                return
-                
-            except Exception as e:
-                print(f"Failed to download from {url}: {e}")
-                continue
-        
-        # If all URLs fail, raise an error
-        raise Exception(f"Failed to download {filename} from all available sources")
     
-    def download_mnist(self):
-        """Download all MNIST files if they don't exist."""
-        print("Checking MNIST dataset...")
-        for file_type, filename in self.FILES.items():
-            self.download_file(filename)
-        print("MNIST dataset ready.")
-    
-    def load_images(self, filename):
+    def download_and_load_pytorch(self):
         """
-        Load images from MNIST IDX file format.
+        Download MNIST using PyTorch and convert to numpy arrays.
         
-        Args:
-            filename (str): Name of the images file
-            
         Returns:
-            np.ndarray: Array of images with shape (num_images, height, width)
+            tuple: (X_train, y_train, X_test, y_test) as numpy arrays
         """
-        filepath = os.path.join(self.data_dir, filename)
+        if not PYTORCH_AVAILABLE:
+            raise ImportError("PyTorch not available. Please install with: pip install torch torchvision")
         
-        with gzip.open(filepath, 'rb') as f:
-            # Read magic number and dimensions
-            magic = int.from_bytes(f.read(4), 'big')
-            num_images = int.from_bytes(f.read(4), 'big')
-            height = int.from_bytes(f.read(4), 'big')
-            width = int.from_bytes(f.read(4), 'big')
-            
-            # Read image data
-            images = np.frombuffer(f.read(), dtype=np.uint8)
-            images = images.reshape(num_images, height, width)
-            
-        return images
+        print("Downloading MNIST dataset using PyTorch...")
+        
+        # Define transform to convert PIL image to tensor
+        transform = transforms.Compose([transforms.ToTensor()])
+        
+        # Download training dataset
+        train_dataset = torchvision.datasets.MNIST(
+            root=self.data_dir, 
+            train=True, 
+            transform=transform, 
+            download=True
+        )
+        
+        # Download test dataset
+        test_dataset = torchvision.datasets.MNIST(
+            root=self.data_dir, 
+            train=False, 
+            transform=transform, 
+            download=True
+        )
+        
+        print("Converting PyTorch datasets to numpy arrays...")
+        
+        # Convert training data to numpy
+        X_train = []
+        y_train = []
+        for image, label in train_dataset:
+            X_train.append(image.numpy())
+            y_train.append(label)
+        
+        X_train = np.array(X_train)
+        y_train = np.array(y_train)
+        
+        # Convert test data to numpy
+        X_test = []
+        y_test = []
+        for image, label in test_dataset:
+            X_test.append(image.numpy())
+            y_test.append(label)
+        
+        X_test = np.array(X_test)
+        y_test = np.array(y_test)
+        
+        # Remove channel dimension (MNIST is grayscale)
+        X_train = X_train.squeeze(1)  # (N, 1, 28, 28) -> (N, 28, 28)
+        X_test = X_test.squeeze(1)    # (N, 1, 28, 28) -> (N, 28, 28)
+        
+        print(f"Loaded {len(X_train)} training samples and {len(X_test)} test samples")
+        
+        return X_train, y_train, X_test, y_test
     
-    def load_labels(self, filename):
-        """
-        Load labels from MNIST IDX file format.
-        
-        Args:
-            filename (str): Name of the labels file
-            
-        Returns:
-            np.ndarray: Array of labels
-        """
-        filepath = os.path.join(self.data_dir, filename)
-        
-        with gzip.open(filepath, 'rb') as f:
-            # Read magic number and number of labels
-            magic = int.from_bytes(f.read(4), 'big')
-            num_labels = int.from_bytes(f.read(4), 'big')
-            
-            # Read label data
-            labels = np.frombuffer(f.read(), dtype=np.uint8)
-            
-        return labels
     def load_data(self, normalize=True, flatten=True, one_hot=True, validation_split=None):
         """
         Load and preprocess MNIST dataset.
@@ -153,25 +123,14 @@ class MNISTDataLoader:
             tuple: If validation_split is None: (X_train, y_train, X_test, y_test)
                    If validation_split is provided: ((X_train, y_train), (X_val, y_val), (X_test, y_test))
         """
-        # Download data if necessary
-        self.download_mnist()
-        
-        # Load training data
-        print("Loading training data...")
-        X_train = self.load_images(self.FILES['train_images'])
-        y_train = self.load_labels(self.FILES['train_labels'])
-        
-        # Load test data
-        print("Loading test data...")
-        X_test = self.load_images(self.FILES['test_images'])
-        y_test = self.load_labels(self.FILES['test_labels'])
-        
-        print(f"Loaded {len(X_train)} training samples and {len(X_test)} test samples")
+        # Load data using PyTorch
+        X_train, y_train, X_test, y_test = self.download_and_load_pytorch()
         
         # Preprocess data
         if normalize:
-            X_train = X_train.astype(np.float32) / 255.0
-            X_test = X_test.astype(np.float32) / 255.0
+            # Data from PyTorch is already normalized to [0, 1] by ToTensor()
+            X_train = X_train.astype(np.float32)
+            X_test = X_test.astype(np.float32)
         
         if flatten:
             X_train = X_train.reshape(X_train.shape[0], -1)
@@ -180,7 +139,8 @@ class MNISTDataLoader:
         if one_hot:
             y_train = self.to_one_hot(y_train, 10)
             y_test = self.to_one_hot(y_test, 10)
-          # Split training data into train/validation if requested
+        
+        # Split training data into train/validation if requested
         if validation_split is not None:
             X_train_split, X_val, y_train_split, y_val = DataPreprocessor.train_validation_split(
                 X_train, y_train, validation_split=validation_split, shuffle=True, random_seed=42
