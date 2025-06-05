@@ -10,6 +10,7 @@ import numpy as np
 import os
 import time
 import sys
+import argparse
 from datetime import datetime
 
 # Add the parent directory to the Python path to import from src
@@ -22,42 +23,90 @@ from src.utils.visualization import create_visualization_report
 from src.utils.metrics import classification_report
 
 
+def parse_arguments():
+    """Parse command-line arguments."""
+    parser = argparse.ArgumentParser(
+        description='Train a neural network from scratch on MNIST dataset',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    
+    # Training parameters
+    parser.add_argument('--epochs', type=int, default=50,
+                        help='Number of epochs to train')
+    parser.add_argument('--batch-size', type=int, default=128,
+                        help='Batch size for training')
+    parser.add_argument('--learning-rate', type=float, default=0.001,
+                        help='Initial learning rate')
+    parser.add_argument('--momentum', type=float, default=0.9,
+                        help='Momentum for optimizer')
+    
+    # Network architecture
+    parser.add_argument('--hidden-layers', nargs='+', type=int, default=[256, 128, 64],
+                        help='Hidden layer sizes (space-separated)')
+    parser.add_argument('--dropout-rate', type=float, default=0.3,
+                        help='Dropout rate for regularization')
+    parser.add_argument('--activation', type=str, default='relu',
+                        choices=['relu', 'sigmoid', 'tanh'],
+                        help='Activation function for hidden layers')
+    
+    # Training optimization
+    parser.add_argument('--patience', type=int, default=10,
+                        help='Early stopping patience')
+    parser.add_argument('--validation-split', type=float, default=0.15,
+                        help='Validation split ratio')
+    
+    # Saving and logging
+    parser.add_argument('--no-save', action='store_true',
+                        help='Do not save the trained model')
+    parser.add_argument('--no-report', action='store_true',
+                        help='Do not create visualization report')
+    parser.add_argument('--model-path', type=str, default=None,
+                        help='Custom path to save model (defaults to timestamped path)')
+    parser.add_argument('--verbose', type=int, default=2, choices=[0, 1, 2],
+                        help='Verbosity level: 0=silent, 1=progress bar, 2=detailed')
+    
+    return parser.parse_args()
+
+
 def main():
     """Main training function."""
+    # Parse command-line arguments
+    args = parse_arguments()
+    
     print("=" * 80)
     print("MNIST Neural Network Training from Scratch")
     print("=" * 80)
     print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print()
     
-    # Configuration
+    # Configuration - now using command-line arguments
     config = {
         # Data parameters
         'data_dir': 'data',
-        'validation_split': 0.15,
+        'validation_split': args.validation_split,
         'normalize': True,
         'flatten': True,
         'one_hot': True,
         
         # Network architecture
         'input_size': 784,  # 28x28 flattened
-        'hidden_layers': [256, 128, 64],  # Three hidden layers
+        'hidden_layers': args.hidden_layers,  # From command line
         'output_size': 10,  # 10 digit classes
-        'activation': 'relu',
+        'activation': args.activation,  # From command line
         'output_activation': 'softmax',
         'weight_init': 'he',  # Good for ReLU
         'use_dropout': True,
-        'dropout_rate': 0.3,
+        'dropout_rate': args.dropout_rate,  # From command line
         
         # Training parameters
-        'epochs': 50,
-        'batch_size': 128,
-        'learning_rate': 0.001,
-        'momentum': 0.9,
+        'epochs': args.epochs,  # From command line
+        'batch_size': args.batch_size,  # From command line
+        'learning_rate': args.learning_rate,  # From command line
+        'momentum': args.momentum,  # From command line
         'loss': 'cross_entropy',
         
         # Training optimization
-        'patience': 10,  # Early stopping patience
+        'patience': args.patience,  # From command line
         'min_delta': 1e-4,  # Minimum improvement threshold
         'lr_scheduler': {
             'type': 'step',
@@ -67,10 +116,10 @@ def main():
         
         # Logging and saving
         'save_best': True,
-        'verbose': 2,  # Detailed progress
-        'save_model': True,
-        'model_path': f'models/mnist_model_{datetime.now().strftime("%Y%m%d_%H%M%S")}.pkl',
-        'create_report': True
+        'verbose': args.verbose,  # From command line
+        'save_model': not args.no_save,  # From command line
+        'model_path': args.model_path if args.model_path else f'models/mnist_model_{datetime.now().strftime("%Y%m%d_%H%M%S")}.pkl',
+        'create_report': not args.no_report  # From command line
     }
     
     print("Configuration:")
@@ -207,7 +256,8 @@ def main():
         os.makedirs(os.path.dirname(config['model_path']), exist_ok=True)
         model.save_model(config['model_path'])
         print()
-      # Step 6: Create visualization report
+    
+    # Step 6: Create visualization report
     if config['create_report']:
         print("Step 6: Creating visualization report...")
         print("-" * 50)
@@ -217,7 +267,7 @@ def main():
             model_filename = os.path.basename(config['model_path'])
             timestamp = model_filename.replace('mnist_model_', '').replace('.pkl', '')
             
-            create_visualization_report(
+            run_dir = create_visualization_report(
                 model=model,
                 history=history,
                 X_test=X_test,
@@ -227,6 +277,9 @@ def main():
                 save_dir='logs',
                 timestamp=timestamp
             )
+            
+            print(f"\nAll visualization files organized in: {run_dir}")
+            
         except ImportError:
             print("Matplotlib not available. Skipping visualization report.")
         except Exception as e:
