@@ -235,6 +235,41 @@ class LeakyReLU(ActivationFunction):
         return np.where(x > 0, 1, self.alpha)
 
 
+class Linear(ActivationFunction):
+    """
+    Linear activation function (identity function).
+    
+    Linear(x) = x
+    
+    Used for regression tasks or when no activation is needed.
+    Simply passes the input unchanged.
+    """
+    
+    def forward(self, x):
+        """
+        Forward pass of Linear activation.
+        
+        Args:
+            x (np.ndarray): Input array
+            
+        Returns:
+            np.ndarray: Output (same as input)
+        """
+        return x
+    
+    def backward(self, x):
+        """
+        Backward pass of Linear activation.
+        
+        Args:
+            x (np.ndarray): Input array (same as forward pass input)
+            
+        Returns:
+            np.ndarray: Derivative of Linear (always 1)
+        """
+        return np.ones_like(x)
+
+
 # Factory function to get activation function by name
 def get_activation_function(name):
     """
@@ -262,7 +297,8 @@ def get_activation_function(name):
         'sigmoid': Sigmoid(),
         'tanh': Tanh(),
         'softmax': Softmax(),
-        'leaky_relu': LeakyReLU()
+        'leaky_relu': LeakyReLU(),
+        'linear': Linear()
     }
     
     if name.lower() not in activations:
