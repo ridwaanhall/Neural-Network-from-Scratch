@@ -219,11 +219,11 @@ Performance: 95-97% accuracy, 8-15 minutes training
 ## 📋 Requirements
 
 ```txt
-numpy>=1.21.0              # Core mathematical operations
-torch>=1.9.0               # MNIST dataset downloading only
-torchvision>=0.10.0        # Dataset utilities
-matplotlib>=3.3.0          # Visualization (optional)
-tkinter                    # GUI apps (standard library)
+numpy>=2.2.6              # Core mathematical operations
+torch>=2.7.1+cpu          # MNIST dataset downloading only
+torchvision>=0.22.1+cpu   # Dataset utilities
+matplotlib>=3.10.3        # Visualization (optional)
+tkinter                   # GUI apps (standard library)
 ```
 
 ## 🏆 Educational Value
