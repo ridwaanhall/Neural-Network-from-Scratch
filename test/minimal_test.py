@@ -102,6 +102,6 @@ def minimal_test():
 if __name__ == "__main__":
     success = minimal_test()
     if success:
-        print("\n✅ Ready to run full training with: python main.py")
+        print("\n✅ Ready to run full training with: python apps/main.py")
     else:
         print("\n❌ Please check the error messages above")
