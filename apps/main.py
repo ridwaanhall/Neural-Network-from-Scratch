@@ -106,8 +106,7 @@ def train_model(model, X_train, y_train, X_val, y_val, config):
         lr_scheduler={'type': config.get('lr_schedule', 'plateau')},
         save_best=True,
         verbose=1
-    )
-      # Train the model
+    )    # Train the model
     history = trainer.train(
         X_train, y_train,
         X_val, y_val,
@@ -116,6 +115,9 @@ def train_model(model, X_train, y_train, X_val, y_val, config):
         momentum=config.get('momentum', 0.9),
         shuffle=True
     )
+    
+    # Store history in trainer for later access
+    trainer.history = history
     
     logger.info("Training completed!")
     return trainer
@@ -251,11 +253,10 @@ def main():
     logger.info("MNIST Neural Network from Scratch - Starting Pipeline")
     logger.info("="*60)
     
-    try:
-        # Configuration
+    try:        # Configuration
         config = {
             'architecture': args.architecture,
-            'epochs': 5 if args.quick_test else args.epochs,
+            'epochs': args.epochs,  # Always use the user-specified epochs
             'batch_size': args.batch_size,
             'learning_rate': args.learning_rate,
             'momentum': 0.9,
