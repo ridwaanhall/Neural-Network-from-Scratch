@@ -27,12 +27,16 @@ from src.training.trainer import Trainer
 from src.utils.visualization import create_visualization_report
 from src.utils.metrics import calculate_metrics
 
-def setup_logging():
+def setup_logging(timestamp=None):
     """Setup logging configuration"""
-    os.makedirs('logs', exist_ok=True)
+    if timestamp is None:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_filename = f'logs/main_{timestamp}.log'
+    # Create organized log directory structure
+    log_dir = f'logs/run_main_{timestamp}'
+    os.makedirs(log_dir, exist_ok=True)
+    
+    log_filename = f'{log_dir}/main.log'
     
     logging.basicConfig(
         level=logging.INFO,
@@ -43,7 +47,7 @@ def setup_logging():
         ]
     )
     
-    return logging.getLogger(__name__)
+    return logging.getLogger(__name__), timestamp
 
 def create_model(architecture='default'):
     """
@@ -244,11 +248,13 @@ def main():
     parser.add_argument('--learning_rate', type=float, default=0.001, help='Learning rate')
     parser.add_argument('--no_plots', action='store_true', help='Skip plot generation')
     parser.add_argument('--quick_test', action='store_true', help='Run quick test with small dataset')
-    
     args = parser.parse_args()
     
+    # Generate timestamp for consistent file naming across the pipeline
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    
     # Setup logging
-    logger = setup_logging()
+    logger, timestamp = setup_logging(timestamp)
     logger.info("="*60)
     logger.info("MNIST Neural Network from Scratch - Starting Pipeline")
     logger.info("="*60)
@@ -293,13 +299,9 @@ def main():
         
         # Step 3: Train model
         logger.info("Step 3: Training the model...")
-        trainer = train_model(model, X_train, y_train, X_val, y_val, config)
-          # Step 4: Evaluate model
+        trainer = train_model(model, X_train, y_train, X_val, y_val, config)        # Step 4: Evaluate model
         logger.info("Step 4: Evaluating the model...")
         metrics, predictions = evaluate_model(model, X_test, y_test)
-        
-        # Generate timestamp for consistent file naming
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         
         # Step 5: Save model and results
         logger.info("Step 5: Saving model and results...")
