@@ -8,6 +8,7 @@ It provides comprehensive testing metrics and visualizations.
 import numpy as np
 import os
 import sys
+import argparse
 from datetime import datetime
 
 # Add the parent directory to the Python path to import from src
@@ -18,6 +19,28 @@ from src.models.neural_network import NeuralNetwork
 from src.utils.metrics import classification_report, MetricsTracker
 from src.utils.visualization import (plot_confusion_matrix, plot_sample_predictions, 
                                    plot_class_distribution)
+
+
+def parse_arguments():
+    """Parse command-line arguments."""
+    parser = argparse.ArgumentParser(
+        description='Test a trained neural network on MNIST dataset',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    
+    # Model selection
+    parser.add_argument('--model-path', type=str, default=None,
+                        help='Path to the trained model file (if not specified, uses the latest model)')
+    
+    # Testing options
+    parser.add_argument('--no-visualizations', action='store_true',
+                        help='Skip creating visualization plots')
+    parser.add_argument('--verbose', action='store_true',
+                        help='Enable verbose output during evaluation')
+    parser.add_argument('--error-examples', type=int, default=5,
+                        help='Number of error examples to show in analysis')
+    
+    return parser.parse_args()
 
 
 def load_model(model_path):
@@ -343,8 +366,11 @@ def main():
     print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print()
     
+    # Parse command-line arguments
+    args = parse_arguments()
+    
     # Configuration
-    model_path = find_latest_model()
+    model_path = args.model_path if args.model_path else find_latest_model()
     if model_path is None:
         print("❌ No trained model found in models/ directory.")
         print("Please train a model first using: python apps/main.py or python apps/train.py")
@@ -406,7 +432,7 @@ def main():
     print_test_results(results, class_names)
     
     # Step 5: Error analysis
-    analyze_errors(results, X_test, class_names)
+    analyze_errors(results, X_test, class_names, num_examples=args.error_examples)
     
     # Step 6: Generate classification report
     print("\n" + "=" * 60)
@@ -417,36 +443,37 @@ def main():
     metrics_tracker.update(results['true_classes'], results['predictions_classes'], 
                          results['predictions_proba'])
     print(metrics_tracker.get_classification_report())
-    
-    # Step 7: Visualizations (if matplotlib is available)
-    print("\nStep 7: Creating visualizations...")
-    print("-" * 50)
-    
-    try:
-        # Plot confusion matrix
-        plot_confusion_matrix(results['confusion_matrix'], 
-                            class_names=class_names,
-                            save_path='logs/test_confusion_matrix.png')
+      # Step 7: Visualizations (if matplotlib is available)
+    if not args.no_visualizations:
+        print("\nStep 7: Creating visualizations...")
+        print("-" * 50)
         
-        # Plot sample predictions (including errors)
-        plot_sample_predictions(X_test, results['true_classes'], 
-                              results['predictions_classes'],
-                              num_samples=16,
-                              save_path='logs/test_sample_predictions.png',
-                              class_names=class_names)
-        
-        # Plot class distribution
-        plot_class_distribution(results['true_classes'], 
-                              class_names=class_names,
-                              save_path='logs/test_class_distribution.png',
-                              title="Test Set Class Distribution")
-        
-        print("Visualizations saved to logs/ directory.")
-        
-    except ImportError:
-        print("Matplotlib not available. Skipping visualizations.")
-    except Exception as e:
-        print(f"Error creating visualizations: {e}")
+        try:
+            # Import visualization function
+            from src.utils.visualization import create_visualization_report
+            
+            # Generate timestamp for consistent naming
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            
+            # Create comprehensive visualization report for test run
+            run_dir = create_visualization_report(
+                model=model,
+                history=None,  # No training history for test runs
+                X_test=X_test,
+                y_test=results['true_classes'],
+                y_pred=results['predictions_classes'],
+                confusion_mat=results['confusion_matrix'],
+                save_dir='logs',
+                timestamp=timestamp,
+                run_type='test'
+            )
+            
+            print(f"\nAll test visualizations organized in: {run_dir}")
+            
+        except ImportError:
+            print("Matplotlib not available. Skipping visualizations.")
+        except Exception as e:
+            print(f"Error creating visualizations: {e}")
     
     # Final summary
     print("\n" + "=" * 80)
