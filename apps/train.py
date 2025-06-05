@@ -69,7 +69,7 @@ def main():
         'save_best': True,
         'verbose': 2,  # Detailed progress
         'save_model': True,
-        'model_path': 'models/mnist_nn_model.pkl',
+        'model_path': f'models/mnist_model_{datetime.now().strftime("%Y%m%d_%H%M%S")}.pkl',
         'create_report': True
     }
     
