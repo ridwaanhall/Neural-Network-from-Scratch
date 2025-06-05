@@ -262,12 +262,12 @@ def show_project_summary():
     
     print_section("🚀 How to Use")
     usage_examples = [
-        "python main.py                    # Full training pipeline",
-        "python main.py --quick_test       # Quick test with small dataset",
-        "python main.py --architecture deep --epochs 100  # Deep model training",
-        "python train.py                   # Standalone training",
-        "python test.py                    # Model evaluation",
-        "python minimal_test.py            # Basic functionality test"
+        "python apps/main.py                    # Full training pipeline",
+        "python apps/main.py --quick_test       # Quick test with small dataset",
+        "python apps/main.py --architecture deep --epochs 100  # Deep model training",
+        "python apps/train.py                   # Standalone training",
+        "python apps/test.py                    # Model evaluation",
+        "python test/minimal_test.py            # Basic functionality test"
     ]
     
     for example in usage_examples:
@@ -320,8 +320,8 @@ def main():
         print_header("DEMONSTRATION COMPLETED SUCCESSFULLY! 🎉")
         print("""
 Next Steps:
-1. Run 'python main.py --quick_test' for a quick full pipeline test
-2. Run 'python main.py' for complete training with default settings  
+1. Run 'python apps/main.py --quick_test' for a quick full pipeline test
+2. Run 'python apps/main.py' for complete training with default settings  
 3. Read USAGE_GUIDE.md for detailed usage instructions
 4. Explore the src/ directory to understand the implementation
 5. Modify architectures and parameters to experiment
