@@ -48,16 +48,19 @@ nn-scratch/
 ├── 📁 data/                            ✅ MNIST dataset storage
 ├── 📁 models/                          ✅ Trained model storage with timestamps
 ├── 📁 logs/                            ✅ Training logs, plots, and visualizations
-├── 📁 Applications/
-│   ├── main.py                         ✅ Complete end-to-end pipeline
-│   ├── train.py                        ✅ Standalone training script
-│   ├── test.py                         ✅ Comprehensive evaluation script
-│   ├── demo.py                         ✅ Component demonstration
-│   ├── play_app.py                     ✅ Interactive GUI for digit recognition
-│   ├── minimal_test.py                 ✅ Quick functionality verification
-│   ├── test_basic.py                   ✅ Basic import and component test
-│   ├── debug_test.py                   ✅ Debug utilities
-│   └── test_model_loading.py           ✅ Model loading verification
+├── 📁 apps/                            ✅ Main Apps
+│   ├── main.py                         ✅ Complete pipeline
+│   ├── train.py                        ✅ Standalone training
+│   ├── test.py                         ✅ Model evaluation
+│   ├── demo.py                         ✅ Component demo
+│   └── play_app.py                     ✅ Interactive GUI
+├── 📁 debug/
+│   ├── debug_model.py                  ✅ Examine saved model structure
+│   └── debug_test.py                   ✅ Isolate the error in test.py
+├── 📁 test/
+│   ├── minimal_test.py                 ✅ Verify the NN works with MNIST data
+│   ├── test_basic.py                   ✅ Verify the NN implementation works
+│   └── test_model_loading.py           ✅ Check model loading functionality
 ├── 📄 requirements.txt                 ✅ Project dependencies
 ├── 📄 README.md                        ✅ Project overview and quick start
 ├── 📄 USAGE_GUIDE.md                   ✅ Detailed usage instructions
