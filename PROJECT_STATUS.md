@@ -27,7 +27,7 @@ This project represents a complete, production-ready neural network implementati
 ## 📁 COMPLETE PROJECT STRUCTURE
 
 ```txt
-nn-scratch/
+Neural-Network-from-Scratch/
 ├── 📁 src/                             ✅ Core Implementation
 │   ├── 📁 data/
 │   │   ├── __init__.py
@@ -47,27 +47,27 @@ nn-scratch/
 │       └── visualization.py            ✅ Professional plotting utilities
 ├── 📁 data/                            ✅ MNIST dataset storage
 ├── 📁 models/                          ✅ Trained model storage with timestamps
-├── 📁 logs/                            ✅ Training logs, plots, and visualizations
-│   ├── 📁 run_train_20250605_145600/   ✅ Training run
-│   │   ├── training_history.png
-│   │   ├── confusion_matrix.png  
-│   │   ├── confusion_matrix_normalized.png
-│   │   ├── sample_predictions.png
-│   │   ├── class_distribution.png
-│   │   ├── weight_distributions.png
-│   │   └── train_summary.txt
-│   ├── 📁 run_test_20250605_150449/    ✅ Test run
-│   │   ├── confusion_matrix.png
-│   │   ├── confusion_matrix_normalized.png  
-│   │   ├── sample_predictions.png
-│   │   ├── class_distribution.png
-│   │   └── test_summary.txt
-│   └── 📁 run_main_20250605_153938/    ✅ Main pipeline run
-│       ├── confusion_matrix.png
-│       ├── confusion_matrix_normalized.png
-│       ├── sample_predictions.png
-│       ├── class_distribution.png
-│       └── main_summary.txt
+├── 📁 logs/                            ✅ Organized visualization system with timestamped runs
+│   ├── 📁 run_train_YYYYMMDD_HHMMSS/   ✅ Training run outputs
+│   │   ├── training_history.png        ✅ Loss and accuracy curves
+│   │   ├── confusion_matrix.png        ✅ Standard confusion matrix  
+│   │   ├── confusion_matrix_normalized.png ✅ Normalized confusion matrix
+│   │   ├── sample_predictions.png      ✅ Sample predictions with confidence
+│   │   ├── class_distribution.png      ✅ Class distribution analysis
+│   │   ├── weight_distributions.png    ✅ Network weight analysis
+│   │   └── train_summary.txt           ✅ Training session summary
+│   ├── 📁 run_test_YYYYMMDD_HHMMSS/    ✅ Test run outputs
+│   │   ├── confusion_matrix.png        ✅ Model evaluation metrics
+│   │   ├── confusion_matrix_normalized.png ✅ Normalized evaluation
+│   │   ├── sample_predictions.png      ✅ Test predictions analysis
+│   │   ├── class_distribution.png      ✅ Test data distribution
+│   │   └── test_summary.txt            ✅ Test session summary
+│   └── 📁 run_main_YYYYMMDD_HHMMSS/    ✅ Complete pipeline outputs
+│       ├── confusion_matrix.png        ✅ End-to-end evaluation
+│       ├── confusion_matrix_normalized.png ✅ Pipeline assessment
+│       ├── sample_predictions.png      ✅ Final model predictions
+│       ├── class_distribution.png      ✅ Complete data analysis
+│       └── main_summary.txt            ✅ Pipeline execution summary
 ├── 📁 apps/                            ✅ Main Apps
 │   ├── main.py                         ✅ Complete pipeline
 │   ├── train.py                        ✅ Standalone training
@@ -148,11 +148,17 @@ nn-scratch/
 
 ### 📊 Professional Visualization Suite
 
+- ✅ **Organized Directory System** - Timestamped runs with structured output
+  - `logs/run_train_YYYYMMDD_HHMMSS/` - Complete training visualizations
+  - `logs/run_test_YYYYMMDD_HHMMSS/` - Model evaluation outputs  
+  - `logs/run_main_YYYYMMDD_HHMMSS/` - End-to-end pipeline results
 - ✅ **Training History** - Loss and accuracy curves with timestamps
-- ✅ **Confusion Matrix** - Heatmap visualization with class labels
-- ✅ **Sample Predictions** - Visual prediction examples with confidence
+- ✅ **Confusion Matrix** - Standard and normalized heatmap visualization
+- ✅ **Sample Predictions** - Visual prediction examples with confidence scores
 - ✅ **Error Analysis** - Misclassification pattern investigation
 - ✅ **Class Distribution** - Dataset balance visualization
+- ✅ **Weight Distribution** - Network parameter analysis and monitoring
+- ✅ **Session Summaries** - Text-based training and test reports
 
 ### 💾 Robust Data Pipeline
 
@@ -219,16 +225,21 @@ Performance: Configurable based on architecture choices
 ### 📋 Command Line Applications
 
 ```bash
-# Complete end-to-end pipeline
+# Complete end-to-end pipeline with enhanced CLI
 python apps/main.py                         # Full training with default settings
 python apps/main.py --quick_test            # Rapid testing with reduced dataset
 python apps/main.py --architecture deep     # Use deep network architecture  
-python apps/main.py --epochs 100            # Custom epoch count
+python apps/main.py --epochs 100 --batch_size 64 --learning_rate 0.001  # Custom parameters
 python apps/main.py --no_plots             # Skip visualization generation
 
-# Standalone training and evaluation
-python apps/train.py                        # Train model with advanced features
-python apps/test.py                         # Comprehensive model evaluation
+# Standalone training with comprehensive CLI options
+python apps/train.py --epochs 50 --batch-size 128 --learning-rate 0.01 --verbose
+python apps/train.py --no-report            # Skip visualization generation
+
+# Model evaluation with flexible testing options  
+python apps/test.py --model-path models/mnist_model_YYYYMMDD_HHMMSS.pkl --verbose
+python apps/test.py --no-visualizations     # Skip test visualizations
+python apps/test.py --error-examples        # Show detailed error analysis
 
 # Testing and validation
 python apps/demo.py                         # Component demonstration
