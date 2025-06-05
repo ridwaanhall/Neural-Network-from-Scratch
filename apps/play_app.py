@@ -23,6 +23,10 @@ import os
 import pickle
 from PIL import Image, ImageDraw
 import glob
+import sys
+
+# Add the parent directory to the Python path to import from src
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import our neural network components
 from src.models.neural_network import NeuralNetwork
