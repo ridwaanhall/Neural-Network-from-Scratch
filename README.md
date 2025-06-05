@@ -16,7 +16,8 @@ A complete, professional neural network implementation built entirely from scrat
 - ✅ **4 Loss Functions** - CrossEntropy, MSE, BCE, Huber Loss
 - ✅ **Advanced Training** - SGD with momentum, learning rate scheduling, early stopping
 - ✅ **Interactive GUI** - Real-time digit recognition with drawing canvas
-- ✅ **Comprehensive Visualization** - Training curves, confusion matrices, sample predictions
+- ✅ **Organized Visualizations** - Timestamped directories for train/test/main runs
+- ✅ **Command-Line Interface** - Full CLI support with configurable parameters
 - ✅ **Model Persistence** - Save/load trained models with full state restoration
 
 ## 🚀 Quick Start
@@ -26,24 +27,35 @@ A complete, professional neural network implementation built entirely from scrat
 pip install -r requirements.txt
 
 # 2. Quick test (recommended first run)
-python apps/main.py --quick_test
+python apps/main.py --epochs 2 --quick_test
 
-# 3. Full training
-python apps/main.py
+# 3. Training with custom parameters
+python apps/train.py --epochs 10 --batch-size 64 --learning-rate 0.001
 
-# 4. Launch interactive GUI
+# 4. Test a trained model
+python apps/test.py --model-path models/mnist_model_YYYYMMDD_HHMMSS.pkl
+
+# 5. Launch interactive GUI
 python apps/play_app.py
 ```
 
 ## 📊 Performance Results
 
-Our implementation achieves **96.71% accuracy** on the MNIST test set:
+Our implementation achieves **96.71% accuracy** on the MNIST test set with organized visualization outputs:
 
-![Training History](logs/training_history_20250604_231500.png)
+**Training Run Visualizations** (`logs/run_train_YYYYMMDD_HHMMSS/`):
 
-![Confusion Matrix](logs/confusion_matrix_20250604_231500.png)
+- Training history plots with loss and accuracy curves  
+- Confusion matrices (standard and normalized)
+- Sample predictions with confidence scores
+- Class distribution analysis
+- Weight distribution visualizations
 
-![Sample Predictions](logs/sample_predictions_20250604_231500.png)
+**Test Run Visualizations** (`logs/run_test_YYYYMMDD_HHMMSS/`):
+
+- Model evaluation metrics and confusion matrices
+- Error analysis with misclassification patterns
+- Test-specific performance visualizations
 
 ## 📁 Project Architecture
 
@@ -81,7 +93,10 @@ Neural-Network-from-Scratch/
 │   └── test_model_loading.py           # Check model loading functionality
 ├── 📁 data/                            # MNIST dataset
 ├── 📁 models/                          # Saved models
-├── 📁 logs/                            # Training logs & plots
+├── 📁 logs/                            # Training logs & organized visualizations
+│   ├── 📁 run_train_YYYYMMDD_HHMMSS/   # Training run outputs
+│   ├── 📁 run_test_YYYYMMDD_HHMMSS/    # Test run outputs  
+│   └── 📁 run_main_YYYYMMDD_HHMMSS/    # Main pipeline outputs
 ├── 📄 requirements.txt                 # Dependencies
 ├── 📄 README.md                        # This file
 ├── 📄 USAGE_GUIDE.md                   # Detailed usage
