@@ -16,6 +16,9 @@ import logging
 import argparse
 from datetime import datetime
 
+# Add the parent directory to the Python path to import from src
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from src.data.data_loader import MNISTDataLoader
 from src.models.neural_network import NeuralNetwork
 from src.models.layers import DenseLayer, DropoutLayer

@@ -16,7 +16,11 @@ Key Features Demonstrated:
 
 import os
 import numpy as np
+import sys
 from datetime import datetime
+
+# Add the parent directory to the Python path to import from src
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def print_header(title):
     """Print a formatted header"""

@@ -9,7 +9,11 @@ and monitoring capabilities.
 import numpy as np
 import os
 import time
+import sys
 from datetime import datetime
+
+# Add the parent directory to the Python path to import from src
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.data.data_loader import MNISTDataLoader, DataPreprocessor
 from src.models.neural_network import NeuralNetwork
