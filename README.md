@@ -216,7 +216,7 @@ Input(784) → Dense(512, ReLU) → Dropout(0.3) → Dense(256, ReLU) → Dropou
 Performance: 95-97% accuracy, 8-15 minutes training
 ```
 
-## 📋 Requirements
+## 📋 Requirements*
 
 ```txt
 numpy>=2.2.6              # Core mathematical operations
@@ -225,6 +225,8 @@ torchvision>=0.22.1+cpu   # Dataset utilities
 matplotlib>=3.10.3        # Visualization (optional)
 tkinter                   # GUI apps (standard library)
 ```
+
+**Note: Core dependencies are listed above. See `requirements.txt` for the complete dependency list. Library versions may vary depending on your system and Python environment - the versions shown are from our development setup.*
 
 ## 🏆 Educational Value
 
