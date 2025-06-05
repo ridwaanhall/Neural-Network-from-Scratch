@@ -76,19 +76,42 @@ nn-scratch/
 │       ├── __init__.py
 │       ├── metrics.py                  # Comprehensive evaluation metrics
 │       └── visualization.py            # Professional plotting utilities
-├── 📁 Applications/
+├── 📁 apps/                            # Main Applications
 │   ├── main.py                         # Complete end-to-end pipeline
-│   ├── train.py                        # Standalone training script
+│   ├── train.py                        # Standalone training script  
 │   ├── test.py                         # Comprehensive evaluation script
 │   ├── demo.py                         # Component demonstration
-│   ├── play_app.py                     # Interactive GUI for digit recognition
+│   └── play_app.py                     # Interactive GUI for digit recognition
+├── 📁 test/                            # Testing utilities
 │   ├── minimal_test.py                 # Quick functionality verification
 │   ├── test_basic.py                   # Basic import and component test
-│   ├── debug_test.py                   # Debug utilities
 │   └── test_model_loading.py           # Model loading verification
+├── 📁 debug/                           # Debug utilities
+│   ├── debug_model.py                  # Model structure examination
+│   └── debug_test.py                   # Error isolation tools
 ├── 📁 data/                            # MNIST dataset storage
 ├── 📁 models/                          # Trained model storage with timestamps
-├── 📁 logs/                            # Training logs, plots, and visualizations
+├── 📁 logs/                            # Organized visualization system with timestamped runs
+│   ├── 📁 run_train_YYYYMMDD_HHMMSS/   # Training run outputs
+│   │   ├── training_history.png        # Loss and accuracy curves
+│   │   ├── confusion_matrix.png        # Standard confusion matrix  
+│   │   ├── confusion_matrix_normalized.png # Normalized confusion matrix
+│   │   ├── sample_predictions.png      # Sample predictions with confidence
+│   │   ├── class_distribution.png      # Class distribution analysis
+│   │   ├── weight_distributions.png    # Network weight analysis
+│   │   └── train_summary.txt           # Training session summary
+│   ├── 📁 run_test_YYYYMMDD_HHMMSS/    # Test run outputs
+│   │   ├── confusion_matrix.png        # Model evaluation metrics
+│   │   ├── confusion_matrix_normalized.png # Normalized evaluation
+│   │   ├── sample_predictions.png      # Test predictions analysis
+│   │   ├── class_distribution.png      # Test data distribution
+│   │   └── test_summary.txt            # Test session summary
+│   └── 📁 run_main_YYYYMMDD_HHMMSS/    # Complete pipeline outputs
+│       ├── confusion_matrix.png        # End-to-end evaluation
+│       ├── confusion_matrix_normalized.png # Pipeline assessment
+│       ├── sample_predictions.png      # Final model predictions
+│       ├── class_distribution.png      # Complete data analysis
+│       └── main_summary.txt            # Pipeline execution summary
 ├── 📄 requirements.txt                 # Project dependencies
 ├── 📄 README.md                        # Project overview and quick start
 ├── 📄 USAGE_GUIDE.md                   # This comprehensive guide
@@ -102,10 +125,10 @@ nn-scratch/
 
 ### Main Pipeline (`main.py`)
 
-The primary application that provides a complete end-to-end machine learning pipeline:
+The primary application that provides a complete end-to-end machine learning pipeline with organized visualization output:
 
 ```bash
-# Basic usage
+# Basic usage (creates logs/run_main_YYYYMMDD_HHMMSS/ directory)
 python apps/main.py                         # Full training with default settings
 
 # Architecture options
@@ -115,46 +138,64 @@ python apps/main.py --architecture deep     # Deep 4-layer network for maximum a
 
 # Training parameters
 python apps/main.py --epochs 100            # Custom epoch count
-python apps/main.py --batch_size 64         # Custom batch size
+python apps/main.py --batch_size 64         # Custom batch size  
 python apps/main.py --learning_rate 0.01    # Custom learning rate
 
 # Testing and debugging
 python apps/main.py --quick_test            # Reduced dataset for quick testing
 python apps/main.py --no_plots             # Skip visualization generation
 
-# Combined options
-python apps/main.py --architecture deep --epochs 50 --batch_size 128
+# Combined options for maximum performance
+python apps/main.py --architecture deep --epochs 50 --batch_size 128 --learning_rate 0.001
 ```
+
+**Output Structure**: Creates `logs/run_main_YYYYMMDD_HHMMSS/` with complete pipeline visualizations and summary.
 
 ### Standalone Training (`train.py`)
 
-Focused training script with advanced features:
+Focused training script with comprehensive CLI options and organized visualization output:
 
 ```bash
-# Basic training
+# Basic training (creates logs/run_train_YYYYMMDD_HHMMSS/ directory)
 python apps/train.py
 
-# Custom parameters
-python apps/train.py --epochs 50 --batch_size 32 --learning_rate 0.001
+# Custom parameters with enhanced options
+python apps/train.py --epochs 50 --batch-size 32 --learning-rate 0.001 --verbose
 
-# Advanced features
-python apps/train.py --early_stopping --patience 10 --save_best
+# Advanced training features
+python apps/train.py --early_stopping --patience 15 --save_best --momentum 0.9
+
+# Skip visualization generation for faster training
+python apps/train.py --no-report --epochs 100
+
+# Complete training configuration
+python apps/train.py --epochs 75 --batch-size 64 --learning-rate 0.005 --dropout 0.3 --verbose
 ```
+
+**Output Structure**: Creates `logs/run_train_YYYYMMDD_HHMMSS/` with training visualizations, weight distributions, and training summary.
 
 ### Model Evaluation (`test.py`)
 
-Comprehensive model testing and evaluation:
+Comprehensive model testing and evaluation with organized output:
 
 ```bash
-# Test latest model
+# Test latest model (creates logs/run_test_YYYYMMDD_HHMMSS/ directory)
 python apps/test.py
 
-# Test specific model
-python apps/test.py --model_path models/mnist_model_20250604_231500.pkl
+# Test specific model with enhanced options
+python apps/test.py --model-path models/mnist_model_YYYYMMDD_HHMMSS.pkl --verbose
 
-# Detailed evaluation with plots
-python apps/test.py --detailed --save_plots
+# Skip visualizations for faster testing
+python apps/test.py --no-visualizations --model-path models/mnist_model_YYYYMMDD_HHMMSS.pkl
+
+# Detailed error analysis
+python apps/test.py --error-examples --verbose
+
+# Test with minimal output
+python apps/test.py --model-path models/mnist_model_YYYYMMDD_HHMMSS.pkl --quiet
 ```
+
+**Output Structure**: Creates `logs/run_test_YYYYMMDD_HHMMSS/` with evaluation metrics, confusion matrices, and test summary.
 
 ### Component Demo (`demo.py`)
 
@@ -385,33 +426,75 @@ HuberLoss(delta=1.0)  # Robust loss function
 
 ---
 
-## 📊 Output Files and Logs
+## 📊 Organized Visualization System
 
-### Generated Files
+### Timestamped Directory Structure
 
-After training, the following files are created:
+Each script run creates an organized directory with timestamped outputs:
+
+```txt
+logs/
+├── 📁 run_train_YYYYMMDD_HHMMSS/    # Training runs
+│   ├── training_history.png          # Loss and accuracy curves
+│   ├── confusion_matrix.png          # Standard confusion matrix
+│   ├── confusion_matrix_normalized.png # Normalized confusion matrix  
+│   ├── sample_predictions.png        # Sample predictions with confidence
+│   ├── class_distribution.png        # Training set class distribution
+│   ├── weight_distributions.png      # Network weight analysis
+│   └── train_summary.txt             # Training session summary
+├── 📁 run_test_YYYYMMDD_HHMMSS/     # Test evaluation runs
+│   ├── confusion_matrix.png          # Test evaluation metrics
+│   ├── confusion_matrix_normalized.png # Normalized evaluation  
+│   ├── sample_predictions.png        # Test predictions analysis
+│   ├── class_distribution.png        # Test set class distribution
+│   └── test_summary.txt              # Test session summary
+└── 📁 run_main_YYYYMMDD_HHMMSS/     # Complete pipeline runs
+    ├── confusion_matrix.png          # End-to-end evaluation
+    ├── confusion_matrix_normalized.png # Pipeline assessment
+    ├── sample_predictions.png        # Final model predictions  
+    ├── class_distribution.png        # Complete data analysis
+    └── main_summary.txt              # Pipeline execution summary
+```
+
+### Summary File Contents
+
+Each run generates a summary text file containing:
+
+- Run completion timestamp
+- Performance metrics (accuracy, loss)
+- List of generated visualization files
+- Training parameters (for training runs)
+
+**Example Training Summary**:
+
+```txt
+Train Run Summary - 20250605_145600
+==================================================
+
+Train completed at: 20250605_145600
+Total epochs: 2
+Final training loss: 0.7612
+Final training accuracy: 0.7627
+Final validation loss: 0.4408  
+Final validation accuracy: 0.8758
+
+Visualization files:
+- training_history.png
+- confusion_matrix.png
+- confusion_matrix_normalized.png
+- sample_predictions.png
+- class_distribution.png
+- weight_distributions.png
+```
+
+### Model File Naming
+
+Trained models are saved with datetime timestamps:
 
 ```txt
 models/
-├── mnist_model_YYYYMMDD_HHMMSS.pkl    # Trained model
-└── results_YYYYMMDD_HHMMSS.pkl        # Training results
-
-logs/
-├── main_YYYYMMDD_HHMMSS.log           # Training log
-├── training_history_YYYYMMDD_HHMMSS.png  # Loss/accuracy curves
-├── confusion_matrix_YYYYMMDD_HHMMSS.png  # Confusion matrix heatmap
-└── sample_predictions_YYYYMMDD_HHMMSS.png # Sample prediction visualizations
+└── mnist_model_YYYYMMDD_HHMMSS.pkl   # Timestamped model files
 ```
-
-### Log File Contents
-
-Training logs contain:
-
-- Model architecture details
-- Training parameters
-- Epoch-by-epoch progress
-- Performance metrics
-- Error messages and warnings
 
 ---
 
