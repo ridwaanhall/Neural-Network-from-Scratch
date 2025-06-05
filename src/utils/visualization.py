@@ -44,14 +44,13 @@ def plot_training_history(history, save_path=None, figsize=(12, 4)):
     ax2.set_ylabel('Accuracy')
     ax2.legend()
     ax2.grid(True, alpha=0.3)
-    
     plt.tight_layout()
     
     if save_path:
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
-        print(f"Training history plot saved to {save_path}")
-    
-    plt.show()
+        plt.close()  # Close the figure to free memory
+    else:
+        plt.show()
 
 
 def plot_confusion_matrix(confusion_matrix, class_names=None, save_path=None, 
@@ -103,12 +102,11 @@ def plot_confusion_matrix(confusion_matrix, class_names=None, save_path=None,
                    ha="center", va="center",
                    color="white" if cm[i, j] > thresh else "black",
                    fontweight='bold')
-    
     plt.tight_layout()
     
     if save_path:
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
-        print(f"Confusion matrix plot saved to {save_path}")
+        plt.close()  # Close the figure to free memory
     
     plt.show()
 
@@ -179,12 +177,11 @@ def plot_sample_predictions(X_test, y_true, y_pred, num_samples=16,
     # Hide unused subplots
     for i in range(num_samples, len(axes)):
         axes[i].axis('off')
-    
     plt.tight_layout()
     
     if save_path:
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
-        print(f"Sample predictions plot saved to {save_path}")
+        plt.close()  # Close the figure to free memory
     
     plt.show()
 
@@ -233,12 +230,11 @@ def plot_class_distribution(y_data, class_names=None, save_path=None,
     # Rotate x-axis labels if needed
     if len(class_names[0]) > 5:
         plt.xticks(rotation=45, ha='right')
-    
     plt.tight_layout()
     
     if save_path:
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
-        print(f"Class distribution plot saved to {save_path}")
+        plt.close()  # Close the figure to free memory
     
     plt.show()
 
@@ -426,7 +422,7 @@ def plot_weights_distribution(model, save_path=None, figsize=(15, 10)):
 
 
 def create_visualization_report(model, history, X_test, y_test, y_pred, 
-                              confusion_mat, save_dir='logs', timestamp=None):
+                              confusion_mat, save_dir='logs', timestamp=None, run_type='train'):
     """
     Create a comprehensive visualization report for model evaluation.
     
@@ -439,23 +435,24 @@ def create_visualization_report(model, history, X_test, y_test, y_pred,
         confusion_mat (numpy.ndarray): Confusion matrix
         save_dir (str): Directory to save visualizations
         timestamp (str): Optional timestamp for file naming
+        run_type (str): Type of run ('train' or 'test') for directory naming
     """
     # Generate timestamp if not provided
     if timestamp is None:
         from datetime import datetime
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
-    # Create timestamped subdirectory for this training run
-    run_dir = os.path.join(save_dir, f'run_{timestamp}')
+    # Create timestamped subdirectory for this run with run type
+    run_dir = os.path.join(save_dir, f'run_{run_type}_{timestamp}')
     os.makedirs(run_dir, exist_ok=True)
-    
     print("Creating visualization report...")
     print(f"Saving visualizations to: {run_dir}")
     
-    # 1. Training history
-    plot_training_history(history, 
-                         save_path=os.path.join(run_dir, 'training_history.png'))
-    print(f"Training history plot saved to {run_dir}/training_history.png")
+    # 1. Training history (only for training runs)
+    if run_type == 'train' and history is not None:
+        plot_training_history(history, 
+                             save_path=os.path.join(run_dir, 'training_history.png'))
+        print(f"Training history plot saved to {run_dir}/training_history.png")
     
     # 2. Confusion matrix
     class_names = [str(i) for i in range(10)]  # MNIST digits
@@ -475,38 +472,42 @@ def create_visualization_report(model, history, X_test, y_test, y_pred,
     print(f"Sample predictions plot saved to {run_dir}/sample_predictions.png")
     
     # 5. Class distribution
+    title = f"{'Test' if run_type == 'test' else 'Test'} Set Class Distribution"
     plot_class_distribution(y_test, class_names=class_names,
                           save_path=os.path.join(run_dir, 'class_distribution.png'),
-                          title="Test Set Class Distribution")
+                          title=title)
     print(f"Class distribution plot saved to {run_dir}/class_distribution.png")
     
-    # 6. Weight distributions
-    plot_weights_distribution(model, 
-                            save_path=os.path.join(run_dir, 'weight_distributions.png'))
-    print(f"Weight distributions plot saved to {run_dir}/weight_distributions.png")
-    
-    # Create a summary file with training information
-    summary_path = os.path.join(run_dir, 'training_summary.txt')
+    # 6. Weight distributions (only for training runs)
+    if run_type == 'train':
+        plot_weights_distribution(model, 
+                                save_path=os.path.join(run_dir, 'weight_distributions.png'))
+        print(f"Weight distributions plot saved to {run_dir}/weight_distributions.png")
+      # Create a summary file with run information
+    summary_path = os.path.join(run_dir, f'{run_type}_summary.txt')
     with open(summary_path, 'w') as f:
-        f.write(f"Training Run Summary - {timestamp}\n")
+        f.write(f"{run_type.capitalize()} Run Summary - {timestamp}\n")
         f.write("=" * 50 + "\n\n")
-        f.write(f"Training completed at: {timestamp}\n")
-        f.write(f"Total epochs: {len(history['train_loss'])}\n")
-        if history['train_loss']:
-            f.write(f"Final training loss: {history['train_loss'][-1]:.4f}\n")
-            f.write(f"Final training accuracy: {history['train_accuracy'][-1]:.4f}\n")
-        if history['val_loss'] and any(loss > 0 for loss in history['val_loss']):
-            f.write(f"Final validation loss: {history['val_loss'][-1]:.4f}\n")
-            f.write(f"Final validation accuracy: {history['val_accuracy'][-1]:.4f}\n")
+        f.write(f"{run_type.capitalize()} completed at: {timestamp}\n")
+        if run_type == 'train':
+            f.write(f"Total epochs: {len(history['train_loss'])}\n")
+            if history['train_loss']:
+                f.write(f"Final training loss: {history['train_loss'][-1]:.4f}\n")
+                f.write(f"Final training accuracy: {history['train_accuracy'][-1]:.4f}\n")
+            if history['val_loss'] and any(loss > 0 for loss in history['val_loss']):
+                f.write(f"Final validation loss: {history['val_loss'][-1]:.4f}\n")
+                f.write(f"Final validation accuracy: {history['val_accuracy'][-1]:.4f}\n")
         f.write(f"\nVisualization files:\n")
-        f.write(f"- training_history.png\n")
+        if run_type == 'train':
+            f.write(f"- training_history.png\n")
         f.write(f"- confusion_matrix.png\n")
         f.write(f"- confusion_matrix_normalized.png\n")
         f.write(f"- sample_predictions.png\n")
         f.write(f"- class_distribution.png\n")
-        f.write(f"- weight_distributions.png\n")
+        if run_type == 'train':
+            f.write(f"- weight_distributions.png\n")
     
-    print(f"Training summary saved to {run_dir}/training_summary.txt")
+    print(f"{run_type.capitalize()} summary saved to {run_dir}/{run_type}_summary.txt")
     print(f"Visualization report completed! All files saved in: {run_dir}")
     
     return run_dir
