@@ -126,7 +126,7 @@ All project dependencies are managed through `requirements.txt` with pinned vers
 If you discover a security vulnerability in this project:
 
 1. **DO NOT** create a public GitHub issue
-2. **Email**: Send details to [security-contact@yourproject.com] (replace with actual contact)
+2. **Email**: Send details to <hi@ridwaanhall.com>
 3. **Include**:
    - Description of the vulnerability
    - Steps to reproduce
@@ -201,8 +201,8 @@ If you discover a security vulnerability in this project:
 
 ## Contact Information
 
-- **Security Team**: [security@yourproject.com] (replace with actual contact)
-- **Project Maintainer**: [maintainer@yourproject.com] (replace with actual contact)  
+- **Security Team**: <hi@ridwaanhall.com>
+- **Project Maintainer**: <hi@ridwaanhall.com>
 - **Public Issues**: GitHub Issues (for non-security bugs only)
 
 ## Additional Resources
