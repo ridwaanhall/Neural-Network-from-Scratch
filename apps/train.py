@@ -207,13 +207,16 @@ def main():
         os.makedirs(os.path.dirname(config['model_path']), exist_ok=True)
         model.save_model(config['model_path'])
         print()
-    
-    # Step 6: Create visualization report
+      # Step 6: Create visualization report
     if config['create_report']:
         print("Step 6: Creating visualization report...")
         print("-" * 50)
         
         try:
+            # Extract timestamp from model path for consistent naming
+            model_filename = os.path.basename(config['model_path'])
+            timestamp = model_filename.replace('mnist_model_', '').replace('.pkl', '')
+            
             create_visualization_report(
                 model=model,
                 history=history,
@@ -221,7 +224,8 @@ def main():
                 y_test=y_test_classes,
                 y_pred=test_pred_classes,
                 confusion_mat=test_results['confusion_matrix'],
-                save_dir='logs'
+                save_dir='logs',
+                timestamp=timestamp
             )
         except ImportError:
             print("Matplotlib not available. Skipping visualization report.")
