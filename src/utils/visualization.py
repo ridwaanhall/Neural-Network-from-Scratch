@@ -428,57 +428,88 @@ def plot_weights_distribution(model, save_path=None, figsize=(15, 10)):
 def create_visualization_report(model, history, X_test, y_test, y_pred, 
                               confusion_mat, save_dir='logs', timestamp=None):
     """
-    Create a comprehensive visualization report.
+    Create a comprehensive visualization report for model evaluation.
     
     Args:
         model: Trained neural network model
         history (dict): Training history
-        X_test (np.ndarray): Test data
-        y_test (np.ndarray): True test labels
-        y_pred (np.ndarray): Predicted test labels
-        confusion_mat (np.ndarray): Confusion matrix
-        save_dir (str): Directory to save plots
-        timestamp (str): Optional timestamp for filenames
+        X_test (numpy.ndarray): Test features
+        y_test (numpy.ndarray): True test labels
+        y_pred (numpy.ndarray): Predicted test labels
+        confusion_mat (numpy.ndarray): Confusion matrix
+        save_dir (str): Directory to save visualizations
+        timestamp (str): Optional timestamp for file naming
     """
-    from datetime import datetime
-    
-    if not os.path.exists(save_dir):
-        os.makedirs(save_dir)
-    
     # Generate timestamp if not provided
     if timestamp is None:
+        from datetime import datetime
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
+    # Create timestamped subdirectory for this training run
+    run_dir = os.path.join(save_dir, f'run_{timestamp}')
+    os.makedirs(run_dir, exist_ok=True)
+    
     print("Creating visualization report...")
+    print(f"Saving visualizations to: {run_dir}")
     
     # 1. Training history
     plot_training_history(history, 
-                         save_path=os.path.join(save_dir, f'training_history_{timestamp}.png'))
+                         save_path=os.path.join(run_dir, 'training_history.png'))
+    print(f"Training history plot saved to {run_dir}/training_history.png")
     
     # 2. Confusion matrix
     class_names = [str(i) for i in range(10)]  # MNIST digits
     plot_confusion_matrix(confusion_mat, class_names=class_names,
-                         save_path=os.path.join(save_dir, f'confusion_matrix_{timestamp}.png'))
+                         save_path=os.path.join(run_dir, 'confusion_matrix.png'))
+    print(f"Confusion matrix plot saved to {run_dir}/confusion_matrix.png")
     
     # 3. Normalized confusion matrix
     plot_confusion_matrix(confusion_mat, class_names=class_names, normalize=True,
-                         save_path=os.path.join(save_dir, f'confusion_matrix_normalized_{timestamp}.png'))
+                         save_path=os.path.join(run_dir, 'confusion_matrix_normalized.png'))
+    print(f"Normalized confusion matrix plot saved to {run_dir}/confusion_matrix_normalized.png")
     
     # 4. Sample predictions
     plot_sample_predictions(X_test, y_test, y_pred, num_samples=16,
-                          save_path=os.path.join(save_dir, f'sample_predictions_{timestamp}.png'),
+                          save_path=os.path.join(run_dir, 'sample_predictions.png'),
                           class_names=class_names)
+    print(f"Sample predictions plot saved to {run_dir}/sample_predictions.png")
     
     # 5. Class distribution
     plot_class_distribution(y_test, class_names=class_names,
-                          save_path=os.path.join(save_dir, f'class_distribution_{timestamp}.png'),
+                          save_path=os.path.join(run_dir, 'class_distribution.png'),
                           title="Test Set Class Distribution")
+    print(f"Class distribution plot saved to {run_dir}/class_distribution.png")
     
     # 6. Weight distributions
     plot_weights_distribution(model, 
-                            save_path=os.path.join(save_dir, f'weight_distributions_{timestamp}.png'))
+                            save_path=os.path.join(run_dir, 'weight_distributions.png'))
+    print(f"Weight distributions plot saved to {run_dir}/weight_distributions.png")
     
-    print(f"Visualization report saved to {save_dir}/")
+    # Create a summary file with training information
+    summary_path = os.path.join(run_dir, 'training_summary.txt')
+    with open(summary_path, 'w') as f:
+        f.write(f"Training Run Summary - {timestamp}\n")
+        f.write("=" * 50 + "\n\n")
+        f.write(f"Training completed at: {timestamp}\n")
+        f.write(f"Total epochs: {len(history['train_loss'])}\n")
+        if history['train_loss']:
+            f.write(f"Final training loss: {history['train_loss'][-1]:.4f}\n")
+            f.write(f"Final training accuracy: {history['train_accuracy'][-1]:.4f}\n")
+        if history['val_loss'] and any(loss > 0 for loss in history['val_loss']):
+            f.write(f"Final validation loss: {history['val_loss'][-1]:.4f}\n")
+            f.write(f"Final validation accuracy: {history['val_accuracy'][-1]:.4f}\n")
+        f.write(f"\nVisualization files:\n")
+        f.write(f"- training_history.png\n")
+        f.write(f"- confusion_matrix.png\n")
+        f.write(f"- confusion_matrix_normalized.png\n")
+        f.write(f"- sample_predictions.png\n")
+        f.write(f"- class_distribution.png\n")
+        f.write(f"- weight_distributions.png\n")
+    
+    print(f"Training summary saved to {run_dir}/training_summary.txt")
+    print(f"Visualization report completed! All files saved in: {run_dir}")
+    
+    return run_dir
 
 
 # Set default matplotlib style for better plots
