@@ -347,7 +347,7 @@ def main():
     model_path = find_latest_model()
     if model_path is None:
         print("❌ No trained model found in models/ directory.")
-        print("Please train a model first using: python main.py or python train.py")
+        print("Please train a model first using: python apps/main.py or python apps/train.py")
         return
     
     data_dir = 'data'
