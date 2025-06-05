@@ -48,7 +48,7 @@ def parse_arguments():
     parser.add_argument('--activation', type=str, default='relu',
                         choices=['relu', 'sigmoid', 'tanh'],
                         help='Activation function for hidden layers')
-    parser.add_argument('--weight-init', type=str, default='he',
+    parser.add_argument('--weight-init', type=str, default='xavier',
                         choices=['xavier', 'he', 'random', 'zeros'],
                         help='Weight initialization method')
     parser.add_argument('--loss', type=str, default='cross_entropy',
