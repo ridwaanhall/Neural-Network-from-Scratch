@@ -30,7 +30,7 @@ python minimal_test.py
 
 ```bash
 # Quick test with reduced dataset (fastest way to verify everything works)
-python main.py --quick_test
+python apps/main.py --quick_test
 
 # Expected output: ~85-90% accuracy in 1-2 minutes
 ```
@@ -39,7 +39,7 @@ python main.py --quick_test
 
 ```bash
 # Complete training with default architecture
-python main.py
+python apps/main.py
 
 # Expected output: ~95% accuracy in 5-10 minutes
 ```
@@ -48,7 +48,7 @@ python main.py
 
 ```bash
 # Launch digit recognition interface
-python play_app.py
+python apps/play_app.py
 
 # Draw digits and test the model in real-time
 ```
@@ -106,24 +106,24 @@ The primary application that provides a complete end-to-end machine learning pip
 
 ```bash
 # Basic usage
-python main.py                         # Full training with default settings
+python apps/main.py                         # Full training with default settings
 
 # Architecture options
-python main.py --architecture simple   # Quick 2-layer network
-python main.py --architecture default  # Balanced 3-layer network (default)
-python main.py --architecture deep     # Deep 4-layer network for maximum accuracy
+python apps/main.py --architecture simple   # Quick 2-layer network
+python apps/main.py --architecture default  # Balanced 3-layer network (default)
+python apps/main.py --architecture deep     # Deep 4-layer network for maximum accuracy
 
 # Training parameters
-python main.py --epochs 100            # Custom epoch count
-python main.py --batch_size 64         # Custom batch size
-python main.py --learning_rate 0.01    # Custom learning rate
+python apps/main.py --epochs 100            # Custom epoch count
+python apps/main.py --batch_size 64         # Custom batch size
+python apps/main.py --learning_rate 0.01    # Custom learning rate
 
 # Testing and debugging
-python main.py --quick_test            # Reduced dataset for quick testing
-python main.py --no_plots             # Skip visualization generation
+python apps/main.py --quick_test            # Reduced dataset for quick testing
+python apps/main.py --no_plots             # Skip visualization generation
 
 # Combined options
-python main.py --architecture deep --epochs 50 --batch_size 128
+python apps/main.py --architecture deep --epochs 50 --batch_size 128
 ```
 
 ### Standalone Training (`train.py`)
@@ -132,13 +132,13 @@ Focused training script with advanced features:
 
 ```bash
 # Basic training
-python train.py
+python apps/train.py
 
 # Custom parameters
-python train.py --epochs 50 --batch_size 32 --learning_rate 0.001
+python apps/train.py --epochs 50 --batch_size 32 --learning_rate 0.001
 
 # Advanced features
-python train.py --early_stopping --patience 10 --save_best
+python apps/train.py --early_stopping --patience 10 --save_best
 ```
 
 ### Model Evaluation (`test.py`)
@@ -147,13 +147,13 @@ Comprehensive model testing and evaluation:
 
 ```bash
 # Test latest model
-python test.py
+python apps/test.py
 
 # Test specific model
-python test.py --model_path models/mnist_model_20250604_231500.pkl
+python apps/test.py --model_path models/mnist_model_20250604_231500.pkl
 
 # Detailed evaluation with plots
-python test.py --detailed --save_plots
+python apps/test.py --detailed --save_plots
 ```
 
 ### Component Demo (`demo.py`)
@@ -162,7 +162,7 @@ Demonstrates individual components and their capabilities:
 
 ```bash
 # Run component demonstrations
-python demo.py
+python apps/demo.py
 
 # Shows: activation functions, loss functions, layer types, etc.
 ```
@@ -192,7 +192,7 @@ python test_model_loading.py
 Launch an interactive Tkinter-based application for real-time digit recognition:
 
 ```bash
-python play_app.py
+python apps/play_app.py
 ```
 
 **Features:**
@@ -444,20 +444,20 @@ python -c "from src.data.data_loader import load_mnist_data; load_mnist_data()"
 
 ```bash
 # Use smaller batch size
-python main.py --batch_size 16
+python apps/main.py --batch_size 16
 
 # Use simple architecture
-python main.py --architecture simple
+python apps/main.py --architecture simple
 ```
 
 #### 4. Training Too Slow
 
 ```bash
 # Use quick test mode
-python main.py --quick_test
+python apps/main.py --quick_test
 
 # Reduce epochs
-python main.py --epochs 10
+python apps/main.py --epochs 10
 ```
 
 ### Performance Optimization
