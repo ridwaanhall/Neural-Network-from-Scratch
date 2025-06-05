@@ -209,8 +209,8 @@ python apps/test.py                         # Comprehensive model evaluation
 
 # Testing and validation
 python apps/demo.py                         # Component demonstration
-python minimal_test.py                 # Quick functionality verification
-python test_basic.py                   # Basic import testing
+python test/minimal_test.py                 # Quick functionality verification
+python test/test_basic.py                   # Basic import testing
 ```
 
 ### 🎮 Interactive Applications
@@ -328,7 +328,7 @@ This neural network implementation is **complete and production-ready** with:
 
 ```bash
 # Quick verification
-python minimal_test.py
+python test/minimal_test.py
 
 # Component demonstration
 python apps/demo.py

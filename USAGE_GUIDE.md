@@ -23,7 +23,7 @@ cd nn-scratch
 pip install -r requirements.txt
 
 # Verify installation
-python minimal_test.py
+python test/minimal_test.py
 ```
 
 ### 2. First Run (Recommended)
@@ -171,16 +171,16 @@ python apps/demo.py
 
 ```bash
 # Minimal functionality test (fastest verification)
-python minimal_test.py
+python test/minimal_test.py
 
 # Basic import and component test
-python test_basic.py
+python test/test_basic.py
 
 # Debug utilities
-python debug_test.py
+python debug/debug_test.py
 
 # Model loading verification
-python test_model_loading.py
+python test/test_model_loading.py
 ```
 
 ---
