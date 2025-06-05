@@ -360,14 +360,14 @@ def find_latest_model():
 
 def main():
     """Main testing function."""
+    # Parse command-line arguments first (before any output)
+    args = parse_arguments()
+    
     print("=" * 80)
     print("MNIST Neural Network Testing")
     print("=" * 80)
     print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print()
-    
-    # Parse command-line arguments
-    args = parse_arguments()
     
     # Configuration
     model_path = args.model_path if args.model_path else find_latest_model()
