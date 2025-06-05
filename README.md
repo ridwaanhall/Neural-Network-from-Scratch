@@ -12,12 +12,13 @@ A complete, professional neural network implementation built entirely from scrat
 - ✅ **Pure NumPy Implementation** - No TensorFlow, PyTorch, or scikit-learn for ML core
 - ✅ **96.71% Test Accuracy** - Proven performance on MNIST dataset  
 - ✅ **Professional Architecture** - Clean OOP design with separation of concerns
-- ✅ **5 Activation Functions** - ReLU, Sigmoid, Tanh, Softmax, LeakyReLU
-- ✅ **4 Loss Functions** - CrossEntropy, MSE, BCE, Huber Loss
+- ✅ **6 Activation Functions** - ReLU, Sigmoid, Tanh, Softmax, LeakyReLU, Linear
+- ✅ **5 Loss Functions** - CrossEntropy, MSE, BCE, CategoricalCE, Huber Loss
+- ✅ **4 Weight Initializers** - Xavier, He, Random, Zeros initialization
 - ✅ **Advanced Training** - SGD with momentum, learning rate scheduling, early stopping
+- ✅ **Comprehensive CLI** - Full command-line interface with 20+ configurable parameters
 - ✅ **Interactive GUI** - Real-time digit recognition with drawing canvas
 - ✅ **Organized Visualizations** - Timestamped directories for train/test/main runs
-- ✅ **Command-Line Interface** - Full CLI support with configurable parameters
 - ✅ **Model Persistence** - Save/load trained models with full state restoration
 
 ## 🚀 Quick Start
@@ -58,8 +59,14 @@ python apps/train.py
 # Custom architecture with deeper network
 python apps/train.py --hidden-layers 512 256 128 64 --epochs 100
 
-# High-performance training setup
-python apps/train.py --epochs 200 --batch-size 64 --learning-rate 0.01 --momentum 0.95
+# Regression-style training with MSE loss
+python apps/train.py --loss mse --output-activation linear --weight-init xavier
+
+# Xavier initialization with sigmoid activation
+python apps/train.py --activation sigmoid --weight-init xavier --epochs 50
+
+# Advanced learning rate scheduling
+python apps/train.py --lr-step-size 10 --lr-gamma 0.8 --epochs 100
 
 # Regularized training to prevent overfitting
 python apps/train.py --dropout-rate 0.4 --patience 15 --validation-split 0.2
@@ -68,23 +75,53 @@ python apps/train.py --dropout-rate 0.4 --patience 15 --validation-split 0.2
 python apps/train.py --verbose 0 --no-report
 ```
 
-**Available Options:**
+**Complete Parameter Reference:**
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `--epochs` | int | 50 | Number of training epochs |
-| `--batch-size` | int | 128 | Mini-batch size for gradient updates |
-| `--learning-rate` | float | 0.001 | Initial learning rate for optimizer |
-| `--momentum` | float | 0.9 | Momentum coefficient for SGD optimizer |
-| `--hidden-layers` | int[] | [256, 128, 64] | Architecture: hidden layer sizes (space-separated) |
-| `--dropout-rate` | float | 0.3 | Dropout probability for regularization |
-| `--activation` | choice | relu | Activation function: `relu`, `sigmoid`, `tanh` |
-| `--patience` | int | 10 | Early stopping patience (epochs without improvement) |
-| `--validation-split` | float | 0.15 | Fraction of training data used for validation |
-| `--no-save` | flag | False | Skip saving the trained model |
-| `--no-report` | flag | False | Skip generating visualization reports |
-| `--model-path` | str | auto | Custom model save path (default: timestamped) |
-| `--verbose` | choice | 2 | Verbosity: `0`=silent, `1`=progress, `2`=detailed |
+| Parameter | Type | Default | Choices | Description |
+|-----------|------|---------|---------|-------------|
+| **Training Parameters** | | | | |
+| `--epochs` | int | 50 | - | Number of training epochs |
+| `--batch-size` | int | 128 | - | Mini-batch size for gradient updates |
+| `--learning-rate` | float | 0.001 | - | Initial learning rate for optimizer |
+| `--momentum` | float | 0.9 | - | Momentum coefficient for SGD optimizer |
+| **Network Architecture** | | | | |
+| `--hidden-layers` | int[] | [256, 128, 64] | - | Hidden layer sizes (space-separated) |
+| `--dropout-rate` | float | 0.3 | - | Dropout probability for regularization |
+| `--activation` | choice | relu | `relu`, `sigmoid`, `tanh` | Activation function for hidden layers |
+| `--weight-init` | choice | he | `xavier`, `he`, `random`, `zeros` | Weight initialization method |
+| `--loss` | choice | cross_entropy | `mse`, `cross_entropy`, `binary_crossentropy`, `categorical_crossentropy_smooth`, `huber` | Loss function to use for training |
+| `--output-activation` | choice | softmax | `softmax`, `sigmoid`, `linear`, `tanh` | Output layer activation function |
+| **Training Optimization** | | | | |
+| `--patience` | int | 10 | - | Early stopping patience (epochs without improvement) |
+| `--validation-split` | float | 0.15 | - | Fraction of training data used for validation |
+| `--min-delta` | float | 0.0001 | - | Minimum improvement threshold for early stopping |
+| `--lr-step-size` | int | 15 | - | Step size for learning rate scheduler |
+| `--lr-gamma` | float | 0.5 | - | Learning rate decay factor |
+| `--no-lr-scheduler` | flag | False | - | Disable learning rate scheduler |
+| **Saving and Logging** | | | | |
+| `--no-save` | flag | False | - | Skip saving the trained model |
+| `--no-report` | flag | False | - | Skip generating visualization reports |
+| `--model-path` | str | auto | - | Custom model save path (default: timestamped) |
+| `--verbose` | choice | 2 | `0`, `1`, `2` | Verbosity: `0`=silent, `1`=progress, `2`=detailed |
+
+**Parameter Combinations Guide:**
+
+```bash
+# Classification (recommended for MNIST)
+python apps/train.py --loss cross_entropy --output-activation softmax --weight-init he
+
+# Regression-style training
+python apps/train.py --loss mse --output-activation linear --weight-init xavier
+
+# Sigmoid-based network (classic approach)
+python apps/train.py --activation sigmoid --weight-init xavier --loss cross_entropy
+
+# Huber loss for robust training
+python apps/train.py --loss huber --output-activation linear --weight-init he
+
+# High-performance setup with advanced scheduling
+python apps/train.py --epochs 200 --batch-size 64 --lr-step-size 10 --lr-gamma 0.8 --patience 20
+```
 
 ### 🧪 Testing Script (`test.py`)
 
@@ -238,7 +275,7 @@ Neural-Network-from-Scratch/
 - **Backpropagation** - Automatic gradient computation with chain rule
 - **Model Serialization** - Complete save/load functionality
 
-### Activation Functions (5 Types)
+### Activation Functions (6 Types)
 
 ```python
 ReLU()          # Rectified Linear Unit
@@ -246,15 +283,17 @@ Sigmoid()       # Logistic activation
 Tanh()          # Hyperbolic tangent
 Softmax()       # Probability distribution
 LeakyReLU()     # Parameterized ReLU
+Linear()        # Identity function (for regression)
 ```
 
-### Loss Functions (4 Types)
+### Loss Functions (5 Types)
 
 ```python
-CrossEntropyLoss()    # Multiclass classification
-MeanSquaredError()    # Regression tasks
-BinaryCrossEntropy()  # Binary classification  
-HuberLoss()           # Robust loss function
+CrossEntropyLoss()           # Multiclass classification
+MeanSquaredError()           # Regression tasks
+BinaryCrossEntropyLoss()     # Binary classification  
+CategoricalCrossEntropyLoss() # Smoothed categorical cross-entropy
+HuberLoss()                  # Robust loss function
 ```
 
 ### Training Features
