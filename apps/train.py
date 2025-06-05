@@ -48,12 +48,30 @@ def parse_arguments():
     parser.add_argument('--activation', type=str, default='relu',
                         choices=['relu', 'sigmoid', 'tanh'],
                         help='Activation function for hidden layers')
+    parser.add_argument('--weight-init', type=str, default='he',
+                        choices=['xavier', 'he', 'random', 'zeros'],
+                        help='Weight initialization method')
+    parser.add_argument('--loss', type=str, default='cross_entropy',
+                        choices=['mse', 'cross_entropy', 'binary_crossentropy', 
+                                'categorical_crossentropy_smooth', 'huber'],
+                        help='Loss function to use for training')
+    parser.add_argument('--output-activation', type=str, default='softmax',
+                        choices=['softmax', 'sigmoid', 'linear', 'tanh'],
+                        help='Output layer activation function')
     
     # Training optimization
     parser.add_argument('--patience', type=int, default=10,
                         help='Early stopping patience')
     parser.add_argument('--validation-split', type=float, default=0.15,
                         help='Validation split ratio')
+    parser.add_argument('--min-delta', type=float, default=1e-4,
+                        help='Minimum improvement threshold for early stopping')
+    parser.add_argument('--lr-step-size', type=int, default=15,
+                        help='Step size for learning rate scheduler')
+    parser.add_argument('--lr-gamma', type=float, default=0.5,
+                        help='Learning rate decay factor')
+    parser.add_argument('--no-lr-scheduler', action='store_true',
+                        help='Disable learning rate scheduler')
     
     # Saving and logging
     parser.add_argument('--no-save', action='store_true',
@@ -93,8 +111,8 @@ def main():
         'hidden_layers': args.hidden_layers,  # From command line
         'output_size': 10,  # 10 digit classes
         'activation': args.activation,  # From command line
-        'output_activation': 'softmax',
-        'weight_init': 'he',  # Good for ReLU
+        'output_activation': args.output_activation,  # From command line
+        'weight_init': args.weight_init,  # From command line
         'use_dropout': True,
         'dropout_rate': args.dropout_rate,  # From command line
         
@@ -103,15 +121,15 @@ def main():
         'batch_size': args.batch_size,  # From command line
         'learning_rate': args.learning_rate,  # From command line
         'momentum': args.momentum,  # From command line
-        'loss': 'cross_entropy',
+        'loss': args.loss,  # From command line
         
         # Training optimization
         'patience': args.patience,  # From command line
-        'min_delta': 1e-4,  # Minimum improvement threshold
-        'lr_scheduler': {
+        'min_delta': args.min_delta,  # From command line
+        'lr_scheduler': None if args.no_lr_scheduler else {
             'type': 'step',
-            'step_size': 15,
-            'gamma': 0.5
+            'step_size': args.lr_step_size,  # From command line
+            'gamma': args.lr_gamma  # From command line
         },
         
         # Logging and saving
