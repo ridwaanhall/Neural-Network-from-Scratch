@@ -211,13 +211,19 @@ def plot_class_distribution(y_data, class_names=None, save_path=None,
         class_names = [f'Class {i}' for i in unique_labels]
     else:
         class_names = [class_names[i] for i in unique_labels]
-    
-    # Create bar plot
+      # Create bar plot
     fig, ax = plt.subplots(figsize=figsize)
-    bars = ax.bar(class_names, counts, color='skyblue', edgecolor='navy', alpha=0.7)
+    
+    # Convert class names to strings and ensure they're treated as categorical
+    x_positions = range(len(class_names))
+    bars = ax.bar(x_positions, counts, color='skyblue', edgecolor='navy', alpha=0.7)
+    
+    # Set x-axis labels
+    ax.set_xticks(x_positions)
+    ax.set_xticklabels(class_names)
     
     # Add value labels on bars
-    for bar, count in zip(bars, counts):
+    for i, (bar, count) in enumerate(zip(bars, counts)):
         height = bar.get_height()
         ax.text(bar.get_x() + bar.get_width()/2., height + height*0.01,
                 f'{count}', ha='center', va='bottom', fontweight='bold')
