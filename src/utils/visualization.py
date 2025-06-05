@@ -453,9 +453,8 @@ def create_visualization_report(model, history, X_test, y_test, y_pred,
     os.makedirs(run_dir, exist_ok=True)
     print("Creating visualization report...")
     print(f"Saving visualizations to: {run_dir}")
-    
-    # 1. Training history (only for training runs)
-    if run_type == 'train' and history is not None:
+      # 1. Training history (for training and main runs)
+    if run_type in ['train', 'main'] and history is not None:
         plot_training_history(history, 
                              save_path=os.path.join(run_dir, 'training_history.png'))
         print(f"Training history plot saved to {run_dir}/training_history.png")
@@ -482,20 +481,19 @@ def create_visualization_report(model, history, X_test, y_test, y_pred,
     plot_class_distribution(y_test, class_names=class_names,
                           save_path=os.path.join(run_dir, 'class_distribution.png'),
                           title=title)
-    print(f"Class distribution plot saved to {run_dir}/class_distribution.png")
-    
-    # 6. Weight distributions (only for training runs)
-    if run_type == 'train':
+    print(f"Class distribution plot saved to {run_dir}/class_distribution.png")    # 6. Weight distributions (for training and main runs)
+    if run_type in ['train', 'main']:
         plot_weights_distribution(model, 
                                 save_path=os.path.join(run_dir, 'weight_distributions.png'))
         print(f"Weight distributions plot saved to {run_dir}/weight_distributions.png")
-      # Create a summary file with run information
+    
+    # Create a summary file with run information
     summary_path = os.path.join(run_dir, f'{run_type}_summary.txt')
     with open(summary_path, 'w') as f:
         f.write(f"{run_type.capitalize()} Run Summary - {timestamp}\n")
         f.write("=" * 50 + "\n\n")
         f.write(f"{run_type.capitalize()} completed at: {timestamp}\n")
-        if run_type == 'train':
+        if run_type in ['train', 'main']:
             f.write(f"Total epochs: {len(history['train_loss'])}\n")
             if history['train_loss']:
                 f.write(f"Final training loss: {history['train_loss'][-1]:.4f}\n")
@@ -504,13 +502,13 @@ def create_visualization_report(model, history, X_test, y_test, y_pred,
                 f.write(f"Final validation loss: {history['val_loss'][-1]:.4f}\n")
                 f.write(f"Final validation accuracy: {history['val_accuracy'][-1]:.4f}\n")
         f.write(f"\nVisualization files:\n")
-        if run_type == 'train':
+        if run_type in ['train', 'main']:
             f.write(f"- training_history.png\n")
         f.write(f"- confusion_matrix.png\n")
         f.write(f"- confusion_matrix_normalized.png\n")
         f.write(f"- sample_predictions.png\n")
         f.write(f"- class_distribution.png\n")
-        if run_type == 'train':
+        if run_type in ['train', 'main']:
             f.write(f"- weight_distributions.png\n")
     
     print(f"{run_type.capitalize()} summary saved to {run_dir}/{run_type}_summary.txt")
