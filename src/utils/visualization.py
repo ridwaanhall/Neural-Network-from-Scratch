@@ -426,7 +426,7 @@ def plot_weights_distribution(model, save_path=None, figsize=(15, 10)):
 
 
 def create_visualization_report(model, history, X_test, y_test, y_pred, 
-                              confusion_mat, save_dir='logs'):
+                              confusion_mat, save_dir='logs', timestamp=None):
     """
     Create a comprehensive visualization report.
     
@@ -438,38 +438,45 @@ def create_visualization_report(model, history, X_test, y_test, y_pred,
         y_pred (np.ndarray): Predicted test labels
         confusion_mat (np.ndarray): Confusion matrix
         save_dir (str): Directory to save plots
+        timestamp (str): Optional timestamp for filenames
     """
+    from datetime import datetime
+    
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
+    
+    # Generate timestamp if not provided
+    if timestamp is None:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
     print("Creating visualization report...")
     
     # 1. Training history
     plot_training_history(history, 
-                         save_path=os.path.join(save_dir, 'training_history.png'))
+                         save_path=os.path.join(save_dir, f'training_history_{timestamp}.png'))
     
     # 2. Confusion matrix
     class_names = [str(i) for i in range(10)]  # MNIST digits
     plot_confusion_matrix(confusion_mat, class_names=class_names,
-                         save_path=os.path.join(save_dir, 'confusion_matrix.png'))
+                         save_path=os.path.join(save_dir, f'confusion_matrix_{timestamp}.png'))
     
     # 3. Normalized confusion matrix
     plot_confusion_matrix(confusion_mat, class_names=class_names, normalize=True,
-                         save_path=os.path.join(save_dir, 'confusion_matrix_normalized.png'))
+                         save_path=os.path.join(save_dir, f'confusion_matrix_normalized_{timestamp}.png'))
     
     # 4. Sample predictions
     plot_sample_predictions(X_test, y_test, y_pred, num_samples=16,
-                          save_path=os.path.join(save_dir, 'sample_predictions.png'),
+                          save_path=os.path.join(save_dir, f'sample_predictions_{timestamp}.png'),
                           class_names=class_names)
     
     # 5. Class distribution
     plot_class_distribution(y_test, class_names=class_names,
-                          save_path=os.path.join(save_dir, 'class_distribution.png'),
+                          save_path=os.path.join(save_dir, f'class_distribution_{timestamp}.png'),
                           title="Test Set Class Distribution")
     
     # 6. Weight distributions
     plot_weights_distribution(model, 
-                            save_path=os.path.join(save_dir, 'weight_distributions.png'))
+                            save_path=os.path.join(save_dir, f'weight_distributions_{timestamp}.png'))
     
     print(f"Visualization report saved to {save_dir}/")
 
