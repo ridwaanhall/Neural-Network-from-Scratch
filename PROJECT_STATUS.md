@@ -197,18 +197,18 @@ Performance: Configurable based on architecture choices
 
 ```bash
 # Complete end-to-end pipeline
-python main.py                         # Full training with default settings
-python main.py --quick_test            # Rapid testing with reduced dataset
-python main.py --architecture deep     # Use deep network architecture  
-python main.py --epochs 100            # Custom epoch count
-python main.py --no_plots             # Skip visualization generation
+python apps/main.py                         # Full training with default settings
+python apps/main.py --quick_test            # Rapid testing with reduced dataset
+python apps/main.py --architecture deep     # Use deep network architecture  
+python apps/main.py --epochs 100            # Custom epoch count
+python apps/main.py --no_plots             # Skip visualization generation
 
 # Standalone training and evaluation
-python train.py                        # Train model with advanced features
-python test.py                         # Comprehensive model evaluation
+python apps/train.py                        # Train model with advanced features
+python apps/test.py                         # Comprehensive model evaluation
 
 # Testing and validation
-python demo.py                         # Component demonstration
+python apps/demo.py                         # Component demonstration
 python minimal_test.py                 # Quick functionality verification
 python test_basic.py                   # Basic import testing
 ```
@@ -217,7 +217,7 @@ python test_basic.py                   # Basic import testing
 
 ```bash
 # GUI digit recognition application
-python play_app.py                     # Launch interactive drawing interface
+python apps/play_app.py                     # Launch interactive drawing interface
 ```
 
 ### 💻 Programmatic Interface
@@ -331,16 +331,16 @@ This neural network implementation is **complete and production-ready** with:
 python minimal_test.py
 
 # Component demonstration
-python demo.py
+python apps/demo.py
 
 # Quick training test
-python main.py --quick_test
+python apps/main.py --quick_test
 
 # Full training
-python main.py
+python apps/main.py
 
 # GUI Application
-python play_app.py
+python apps/play_app.py
 ```
 
 **The project successfully demonstrates a complete understanding of neural network fundamentals and professional software development practices!**
