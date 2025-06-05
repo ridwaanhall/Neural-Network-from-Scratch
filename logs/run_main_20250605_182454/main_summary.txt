@@ -1,0 +1,17 @@
+Main Run Summary - 20250605_182454
+==================================================
+
+Main completed at: 20250605_182454
+Total epochs: 100
+Final training loss: 0.0513
+Final training accuracy: 0.9850
+Final validation loss: 0.0727
+Final validation accuracy: 0.9778
+
+Visualization files:
+- training_history.png
+- confusion_matrix.png
+- confusion_matrix_normalized.png
+- sample_predictions.png
+- class_distribution.png
+- weight_distributions.png
