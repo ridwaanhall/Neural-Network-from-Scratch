@@ -24,7 +24,7 @@ from src.models.neural_network import NeuralNetwork
 from src.models.layers import DenseLayer, DropoutLayer
 from src.models.activations import ReLU, Sigmoid, Softmax
 from src.training.trainer import Trainer
-from src.utils.visualization import plot_training_history, plot_confusion_matrix, plot_sample_predictions
+from src.utils.visualization import create_visualization_report
 from src.utils.metrics import calculate_metrics
 
 def setup_logging():
@@ -182,8 +182,8 @@ def save_model_and_results(model, trainer, metrics, config, timestamp=None):
     logger.info(f"Results saved to: {results_path}")
     return model_path, results_path
 
-def create_visualizations(trainer, metrics, X_test, y_test, predictions, save_plots=True, timestamp=None):
-    """Create and optionally save visualization plots"""
+def create_visualizations(trainer, X_test, y_test, predictions, save_plots=True, timestamp=None):
+    """Create and optionally save visualization plots using organized directory structure"""
     logger = logging.getLogger(__name__)
     logger.info("Creating visualizations...")
     
@@ -192,38 +192,41 @@ def create_visualizations(trainer, metrics, X_test, y_test, predictions, save_pl
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
     try:
-        # Plot training history if available
-        if hasattr(trainer.model, 'history') and trainer.model.history:
-            training_history_path = f'logs/training_history_{timestamp}.png' if save_plots else None
-            plot_training_history(trainer.model.history, save_path=training_history_path)
-            logger.info(f"Training history plot saved to: {training_history_path}")
+        # Get training history
+        history = None
+        if hasattr(trainer, 'history') and trainer.history:
+            history = trainer.history
+        elif hasattr(trainer.model, 'history') and trainer.model.history:
+            history = trainer.model.history
         else:
             logger.warning("No training history available for plotting")
         
-        # Calculate metrics and plot confusion matrix
+        # Prepare data for visualization
         true_classes = y_test.argmax(axis=1)
         predicted_classes = predictions.argmax(axis=1)
         class_names = [str(i) for i in range(10)]  # MNIST digit classes
-        
-        # Calculate comprehensive metrics including confusion matrix
+
         from src.utils.metrics import calculate_metrics
-        metrics = calculate_metrics(true_classes, predicted_classes, class_names)
+        temp_metrics = calculate_metrics(true_classes, predicted_classes, class_names)
+        confusion_mat = temp_metrics['confusion_matrix']
         
-        confusion_matrix_path = f'logs/confusion_matrix_{timestamp}.png' if save_plots else None
-        plot_confusion_matrix(
-            metrics['confusion_matrix'],
-            class_names=class_names,
-            save_path=confusion_matrix_path
-        )
-        
-        # Plot sample predictions
-        sample_predictions_path = f'logs/sample_predictions_{timestamp}.png' if save_plots else None
-        plot_sample_predictions(
-            X_test, y_test, predictions,
-            save_path=sample_predictions_path
-        )
-        
-        logger.info("Visualizations created successfully!")
+        if save_plots:
+            # Create comprehensive visualization report for main run
+            run_dir = create_visualization_report(
+                model=trainer.model,
+                history=history,
+                X_test=X_test,
+                y_test=true_classes,
+                y_pred=predicted_classes,
+                confusion_mat=confusion_mat,
+                save_dir='logs',
+                timestamp=timestamp,
+                run_type='main'
+            )
+            
+            logger.info(f"All main pipeline visualizations organized in: {run_dir}")
+        else:
+            logger.info("Visualization plotting skipped (no_plots=True)")
         
     except Exception as e:
         logger.warning(f"Could not create visualizations: {e}")
@@ -300,11 +303,10 @@ def main():
         # Step 5: Save model and results
         logger.info("Step 5: Saving model and results...")
         model_path, results_path = save_model_and_results(model, trainer, metrics, config, timestamp)
-        
-        # Step 6: Create visualizations
+          # Step 6: Create visualizations
         if not args.no_plots:
             logger.info("Step 6: Creating visualizations...")
-            create_visualizations(trainer, metrics, X_test, y_test, predictions, save_plots=True, timestamp=timestamp)
+            create_visualizations(trainer, X_test, y_test, predictions, save_plots=True, timestamp=timestamp)
         
         # Final summary
         logger.info("="*60)
