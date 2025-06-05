@@ -1,0 +1,17 @@
+Train Run Summary - 20250605_150312
+==================================================
+
+Train completed at: 20250605_150312
+Total epochs: 2
+Final training loss: 0.7612
+Final training accuracy: 0.7627
+Final validation loss: 0.4408
+Final validation accuracy: 0.8758
+
+Visualization files:
+- training_history.png
+- confusion_matrix.png
+- confusion_matrix_normalized.png
+- sample_predictions.png
+- class_distribution.png
+- weight_distributions.png

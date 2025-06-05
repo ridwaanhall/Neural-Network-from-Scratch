@@ -266,7 +266,6 @@ def main():
             # Extract timestamp from model path for consistent naming
             model_filename = os.path.basename(config['model_path'])
             timestamp = model_filename.replace('mnist_model_', '').replace('.pkl', '')
-            
             run_dir = create_visualization_report(
                 model=model,
                 history=history,
@@ -275,7 +274,8 @@ def main():
                 y_pred=test_pred_classes,
                 confusion_mat=test_results['confusion_matrix'],
                 save_dir='logs',
-                timestamp=timestamp
+                timestamp=timestamp,
+                run_type='train'
             )
             
             print(f"\nAll visualization files organized in: {run_dir}")
