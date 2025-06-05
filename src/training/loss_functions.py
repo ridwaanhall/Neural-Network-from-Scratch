@@ -306,9 +306,8 @@ def get_loss_function(name, **kwargs):
     """
     loss_functions = {
         'mse': MeanSquaredError,
-        'mean_squared_error': MeanSquaredError,
         'cross_entropy': CrossEntropyLoss,
-        'categorical_crossentropy': CrossEntropyLoss,
+        # 'categorical_crossentropy': CrossEntropyLoss,
         'binary_crossentropy': BinaryCrossEntropyLoss,
         'categorical_crossentropy_smooth': CategoricalCrossEntropyLoss,
         'huber': HuberLoss
