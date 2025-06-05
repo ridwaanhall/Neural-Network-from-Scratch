@@ -39,6 +39,132 @@ python apps/test.py --model-path models/mnist_model_YYYYMMDD_HHMMSS.pkl
 python apps/play_app.py
 ```
 
+## 📖 Command Line Interface Documentation
+
+### 🏋️ Training Script (`train.py`)
+
+Dedicated training script with comprehensive hyperparameter control and model customization options.
+
+```bash
+python apps/train.py [OPTIONS]
+```
+
+**Usage Examples:**
+
+```bash
+# Basic training with default parameters
+python apps/train.py
+
+# Custom architecture with deeper network
+python apps/train.py --hidden-layers 512 256 128 64 --epochs 100
+
+# High-performance training setup
+python apps/train.py --epochs 200 --batch-size 64 --learning-rate 0.01 --momentum 0.95
+
+# Regularized training to prevent overfitting
+python apps/train.py --dropout-rate 0.4 --patience 15 --validation-split 0.2
+
+# Silent training for batch processing
+python apps/train.py --verbose 0 --no-report
+```
+
+**Available Options:**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `--epochs` | int | 50 | Number of training epochs |
+| `--batch-size` | int | 128 | Mini-batch size for gradient updates |
+| `--learning-rate` | float | 0.001 | Initial learning rate for optimizer |
+| `--momentum` | float | 0.9 | Momentum coefficient for SGD optimizer |
+| `--hidden-layers` | int[] | [256, 128, 64] | Architecture: hidden layer sizes (space-separated) |
+| `--dropout-rate` | float | 0.3 | Dropout probability for regularization |
+| `--activation` | choice | relu | Activation function: `relu`, `sigmoid`, `tanh` |
+| `--patience` | int | 10 | Early stopping patience (epochs without improvement) |
+| `--validation-split` | float | 0.15 | Fraction of training data used for validation |
+| `--no-save` | flag | False | Skip saving the trained model |
+| `--no-report` | flag | False | Skip generating visualization reports |
+| `--model-path` | str | auto | Custom model save path (default: timestamped) |
+| `--verbose` | choice | 2 | Verbosity: `0`=silent, `1`=progress, `2`=detailed |
+
+### 🧪 Testing Script (`test.py`)
+
+Comprehensive model evaluation with detailed performance analysis and error visualization.
+
+```bash
+python apps/test.py [OPTIONS]
+```
+
+**Usage Examples:**
+
+```bash
+# Test latest trained model
+python apps/test.py
+
+# Test specific model with detailed analysis
+python apps/test.py --model-path models/best_model.pkl --verbose
+
+# Quick evaluation without plots for CI/CD
+python apps/test.py --no-visualizations
+
+# Extensive error analysis
+python apps/test.py --error-examples 20 --verbose
+```
+
+**Available Options:**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `--model-path` | str | auto | Path to trained model (default: latest in models/) |
+| `--no-visualizations` | flag | False | Skip generating evaluation plots and reports |
+| `--verbose` | flag | False | Enable detailed evaluation output and metrics |
+| `--error-examples` | int | 5 | Number of misclassified examples to analyze |
+
+### 🎯 Main Pipeline (`main.py`)
+
+Complete end-to-end pipeline with predefined architectures and streamlined workflow.
+
+```bash
+python apps/main.py [OPTIONS]
+```
+
+**Usage Examples:**
+
+```bash
+# Complete pipeline with default balanced architecture
+python apps/main.py
+
+# Quick verification test (recommended for first run)
+python apps/main.py --quick_test
+
+# Deep architecture for maximum accuracy
+python apps/main.py --architecture deep --epochs 100
+
+# Simple architecture for fast experimentation
+python apps/main.py --architecture simple --epochs 10
+
+# Production training without visualizations
+python apps/main.py --architecture deep --no_plots --epochs 200
+```
+
+**Available Options:**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `--architecture` | choice | default | Predefined architecture: `simple`, `default`, `deep` |
+| `--epochs` | int | 50 | Number of training epochs |
+| `--batch_size` | int | 128 | Training batch size |
+| `--learning_rate` | float | 0.001 | Learning rate for optimization |
+| `--no_plots` | flag | False | Skip all visualization generation |
+| `--quick_test` | flag | False | Fast test with reduced dataset (1000 samples) |
+
+**Architecture Specifications:**
+
+| Architecture | Layers | Expected Accuracy | Training Time |
+|-------------|--------|------------------|---------------|
+| **Simple** | 784→128→10 | 85-90% | 1-2 minutes |
+| **Default** | 784→256→128→10 + Dropout | 92-95% | 3-5 minutes |
+| **Deep** | 784→512→256→128→10 + Dropout | 95-97% | 8-15 minutes |
+
 ## 📊 Performance Results
 
 Our implementation achieves **96.71% accuracy** on the MNIST test set with organized visualization outputs:
@@ -140,30 +266,6 @@ HuberLoss()           # Robust loss function
 - **Progress Tracking** - Real-time monitoring
 
 ## 🎮 Usage Examples
-
-### Command Line Interface
-
-```bash
-# Basic training
-python apps/main.py
-
-# Quick test with reduced dataset
-python apps/main.py --quick_test
-
-# Deep architecture for maximum accuracy
-python apps/main.py --architecture deep
-
-# Custom parameters
-python apps/main.py --epochs 100 --batch_size 64 --learning_rate 0.01
-
-# Skip plot generation
-python apps/main.py --no_plots
-
-# Standalone scripts
-python apps/train.py    # Training only
-python apps/test.py     # Evaluation only
-python apps/demo.py     # Component demonstration
-```
 
 ### Interactive GUI Application
 
