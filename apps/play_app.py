@@ -275,15 +275,15 @@ class DigitRecognitionApp:
     
     def draw(self, event):
         """Draw on canvas."""
+        # Draw on tkinter canvas
         if self.drawing:
-            # Draw on tkinter canvas
             self.canvas.create_line(self.last_x, self.last_y, event.x, event.y, 
-                                   fill='white', width=12, capstyle=tk.ROUND, smooth=tk.TRUE)
+                                   fill='white', width=20, capstyle=tk.ROUND, smooth=tk.TRUE)
             
             # Draw on PIL image (scaled down to 28x28)
             x1, y1 = self.last_x / 10, self.last_y / 10
             x2, y2 = event.x / 10, event.y / 10
-            self.pil_draw.line([x1, y1, x2, y2], fill=255, width=2)
+            self.pil_draw.line([x1, y1, x2, y2], fill=255, width=3)
             
             self.last_x = event.x
             self.last_y = event.y
