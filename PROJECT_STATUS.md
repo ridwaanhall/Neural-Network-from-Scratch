@@ -48,6 +48,26 @@ nn-scratch/
 ├── 📁 data/                            ✅ MNIST dataset storage
 ├── 📁 models/                          ✅ Trained model storage with timestamps
 ├── 📁 logs/                            ✅ Training logs, plots, and visualizations
+│   ├── 📁 run_train_20250605_145600/   ✅ Training run
+│   │   ├── training_history.png
+│   │   ├── confusion_matrix.png  
+│   │   ├── confusion_matrix_normalized.png
+│   │   ├── sample_predictions.png
+│   │   ├── class_distribution.png
+│   │   ├── weight_distributions.png
+│   │   └── train_summary.txt
+│   ├── 📁 run_test_20250605_150449/    ✅ Test run
+│   │   ├── confusion_matrix.png
+│   │   ├── confusion_matrix_normalized.png  
+│   │   ├── sample_predictions.png
+│   │   ├── class_distribution.png
+│   │   └── test_summary.txt
+│   └── 📁 run_main_20250605_153938/    ✅ Main pipeline run
+│       ├── confusion_matrix.png
+│       ├── confusion_matrix_normalized.png
+│       ├── sample_predictions.png
+│       ├── class_distribution.png
+│       └── main_summary.txt
 ├── 📁 apps/                            ✅ Main Apps
 │   ├── main.py                         ✅ Complete pipeline
 │   ├── train.py                        ✅ Standalone training
