@@ -2,15 +2,15 @@
 
 [![Python](https://img.shields.io/badge/Python-3.12%2B-blue.svg)](https://python.org)
 [![NumPy](https://img.shields.io/badge/NumPy-Only-green.svg)](https://numpy.org)
-[![Accuracy](https://img.shields.io/badge/MNIST%20Accuracy-96.71%25-brightgreen.svg)](/)
+[![Accuracy](https://img.shields.io/badge/MNIST%20Accuracy-98.06%25-brightgreen.svg)](/)
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-success.svg)](/)
 
-A complete, professional neural network implementation built entirely from scratch using only NumPy for MNIST digit classification. This project achieves **96.71% test accuracy** with a clean, object-oriented architecture and comprehensive documentation.
+A complete, professional neural network implementation built entirely from scratch using only NumPy for MNIST digit classification. This project achieves **98.06% test accuracy** with a clean, object-oriented architecture and comprehensive documentation.
 
 ## 🎯 Key Features
 
 - ✅ **Pure NumPy Implementation** - No TensorFlow, PyTorch, or scikit-learn for ML core
-- ✅ **96.71% Test Accuracy** - Proven performance on MNIST dataset  
+- ✅ **98.06% Test Accuracy** - Proven performance on MNIST dataset  
 - ✅ **Professional Architecture** - Clean OOP design with separation of concerns
 - ✅ **6 Activation Functions** - ReLU, Sigmoid, Tanh, Softmax, LeakyReLU, Linear
 - ✅ **5 Loss Functions** - CrossEntropy, MSE, BCE, CategoricalCE, Huber Loss
@@ -200,11 +200,18 @@ python apps/main.py --arch deep --no_plots --epochs 200
 |-------------|--------|------------------|---------------|
 | **Simple** | 784→128→10 | 85-90% | 1-2 minutes |
 | **Default** | 784→256→128→10 + Dropout | 92-95% | 3-5 minutes |
-| **Deep** | 784→512→256→128→10 + Dropout | 95-97% | 8-15 minutes |
+| **Deep** | 784→512→256→128→10 + Dropout | 95-98% | 1-2 hours |
 
 ## 📊 Performance Results
 
-Our implementation achieves **96.71% accuracy** on the MNIST test set with organized visualization outputs:
+Our implementation achieves **98.06% accuracy** on the MNIST test set with organized visualization outputs:
+
+**Latest Achievement (June 6, 2025):**
+
+- **Test Accuracy:** 98.06%
+- **Configuration:** Deep architecture, 150 epochs, plateau learning rate scheduling
+- **Training Time:** ~1 hour 20 minutes
+- **Architecture:** 784→512→256→128→10 with dropout layers
 
 **Training Run Visualizations** (`logs/run_train_YYYYMMDD_HHMMSS/`):
 
@@ -354,7 +361,7 @@ Performance: 92-95% accuracy, 3-5 minutes training
 
 ```txt  
 Input(784) → Dense(512, ReLU) → Dropout(0.3) → Dense(256, ReLU) → Dropout(0.3) → Dense(128, ReLU) → Dropout(0.2) → Dense(10, Softmax)
-Performance: 95-97% accuracy, 8-15 minutes training
+Performance: 95-98% accuracy, 1-2 hours training (98.06% achieved with plateau scheduling)
 ```
 
 ## 📋 Requirements*
@@ -420,6 +427,6 @@ This implementation demonstrates:
 
 ## 🎯 Project Status
 
-✅ **FULLY OPERATIONAL** - Production ready with 96.71% test accuracy achieved!
+✅ **FULLY OPERATIONAL** - Production ready with 98.06% test accuracy achieved!
 
 This implementation successfully demonstrates professional neural network development from scratch using only NumPy, achieving state-of-the-art results on MNIST digit classification.

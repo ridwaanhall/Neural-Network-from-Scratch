@@ -2,11 +2,11 @@
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://python.org)
 [![NumPy](https://img.shields.io/badge/NumPy-Only-green.svg)](https://numpy.org)
-[![Accuracy](https://img.shields.io/badge/MNIST%20Accuracy-96.71%25-brightgreen.svg)](/)
+[![Accuracy](https://img.shields.io/badge/MNIST%20Accuracy-98.06%25-brightgreen.svg)](/)
 
 ## 🎯 Professional MNIST Neural Network Implementation
 
-This comprehensive guide covers all aspects of using our production-ready neural network implementation built entirely from scratch using only NumPy for MNIST digit classification, achieving **96.71% test accuracy**.
+This comprehensive guide covers all aspects of using our production-ready neural network implementation built entirely from scratch using only NumPy for MNIST digit classification, achieving **98.06% test accuracy**.
 
 ---
 
@@ -44,7 +44,17 @@ python apps/main.py
 # Expected output: ~95% accuracy in 5-10 minutes
 ```
 
-### 4. Interactive GUI Application
+### 4. High-Performance Training (98.06% Achievement)
+
+```bash
+# Maximum accuracy configuration (deep architecture, extended training)
+python apps/main.py --architecture deep --epochs 150
+
+# Expected output: ~98% accuracy in 1-2 hours
+# This configuration achieved 98.06% test accuracy on June 6, 2025
+```
+
+### 5. Interactive GUI Application
 
 ```bash
 # Launch digit recognition interface
@@ -147,6 +157,9 @@ python apps/main.py --no_plots             # Skip visualization generation
 
 # Combined options for maximum performance
 python apps/main.py --arch deep --epochs 50 --batch_size 128 --learning_rate 0.001
+
+# Record-breaking configuration (achieved 98.06% accuracy)
+python apps/main.py --architecture deep --epochs 150 --batch_size 128 --learning_rate 0.001 --momentum 0.9
 ```
 
 **Output Structure**: Creates `logs/run_main_YYYYMMDD_HHMMSS/` with complete pipeline visualizations and summary.
@@ -284,8 +297,8 @@ Use Case: Standard production deployment
 Input(784) → Dense(512, ReLU) → Dropout(0.3) → Dense(256, ReLU) → Dropout(0.3) → 
          Dense(128, ReLU) → Dropout(0.2) → Dense(10, Softmax)
 
-Performance: 95-97% accuracy in 50-100 epochs
-Training Time: 8-15 minutes  
+Performance: 95-98% accuracy in 100-150 epochs (98.06% achieved with plateau scheduling)
+Training Time: 1-2 hours for optimal results  
 Memory Usage: <1GB
 Use Case: Maximum accuracy requirements
 ```
@@ -397,7 +410,7 @@ print(f"Loaded model predictions: {predictions}")
 |--------------|--------|------------|---------------|-------------------|
 | `simple` | 2 | ~100K | 1-2 min | 85-90% |
 | `default` | 3 | ~200K | 3-5 min | 92-95% |
-| `deep` | 4 | ~400K | 8-15 min | 95-97% |
+| `deep` | 4 | ~400K | 1-2 hours | 95-98% |
 
 ### Activation Functions
 
@@ -648,15 +661,17 @@ def process_large_dataset(model, X, batch_size=1000):
 |--------------|----------|---------------|------------|--------------|
 | Simple | 85-90% | 1-2 min | ~1MB | <500MB |
 | Default | 92-95% | 3-5 min | ~2MB | <800MB |
-| Deep | 95-97% | 8-15 min | ~5MB | <1GB |
+| Deep | 95-98% | 1-2 hours | ~5MB | <1GB |
 
-### Achieved Results (Verified)
+### Achieved Results (Latest: June 6, 2025)
 
-- **Maximum Accuracy**: 96.71% on MNIST test set
-- **Training Speed**: 5-10 minutes for standard architecture
+- **Maximum Accuracy**: 98.06% on MNIST test set (LATEST ACHIEVEMENT)
+- **Previous Best**: 96.71% (previous milestone)
+- **Configuration**: Deep architecture, 150 epochs, plateau LR scheduling
+- **Training Speed**: 1-2 hours for deep architecture with 150 epochs
 - **Memory Efficiency**: <1GB RAM for complete training
 - **Model Size**: 2-5MB saved model files
-- **Convergence**: Stable training in 30-50 epochs
+- **Convergence**: Stable training with plateau learning rate scheduling
 
 ---
 
