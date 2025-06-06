@@ -262,12 +262,12 @@ def show_project_summary():
     
     print_section("🚀 How to Use")
     usage_examples = [
-        "python apps/main.py                    # Full training pipeline",
-        "python apps/main.py --quick_test       # Quick test with small dataset",
-        "python apps/main.py --architecture deep --epochs 100  # Deep model training",
-        "python apps/train.py                   # Standalone training",
-        "python apps/test.py                    # Model evaluation",
-        "python test/minimal_test.py            # Basic functionality test"
+        "python apps/main.py                           # Full training pipeline",
+        "python apps/main.py --quick_test              # Quick test with small dataset",
+        "python apps/main.py --arch deep --epochs 100  # Deep model training",
+        "python apps/train.py                          # Standalone training",
+        "python apps/test.py                           # Model evaluation",
+        "python test/minimal_test.py                   # Basic functionality test"
     ]
     
     for example in usage_examples:
