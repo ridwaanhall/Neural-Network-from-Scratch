@@ -228,9 +228,9 @@ Performance: Configurable based on architecture choices
 # Complete end-to-end pipeline with enhanced CLI
 python apps/main.py                         # Full training with default settings
 python apps/main.py --quick_test            # Rapid testing with reduced dataset
-python apps/main.py --architecture deep     # Use deep network architecture  
+python apps/main.py --arch deep             # Use deep network architecture  
 python apps/main.py --epochs 100 --batch_size 64 --learning_rate 0.001  # Custom parameters
-python apps/main.py --no_plots             # Skip visualization generation
+python apps/main.py --no_plots              # Skip visualization generation
 
 # Standalone training with comprehensive CLI options
 python apps/train.py --epochs 50 --batch-size 128 --learning-rate 0.01 --verbose
