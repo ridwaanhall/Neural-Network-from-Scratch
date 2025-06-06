@@ -241,7 +241,7 @@ def create_visualizations(trainer, X_test, y_test, predictions, save_plots=True,
 def main():
     """Main execution function"""
     parser = argparse.ArgumentParser(description='MNIST Neural Network from Scratch')
-    parser.add_argument('--architecture', choices=['simple', 'default', 'deep'], 
+    parser.add_argument('--mode', choices=['simple', 'default', 'deep'], 
                        default='default', help='Model architecture')
     parser.add_argument('--epochs', type=int, default=50, help='Number of training epochs')
     parser.add_argument('--batch_size', type=int, default=128, help='Batch size for training')
@@ -259,9 +259,10 @@ def main():
     logger.info("MNIST Neural Network from Scratch - Starting Pipeline")
     logger.info("="*60)
     
-    try:        # Configuration
+    try:
+        # Configuration
         config = {
-            'architecture': args.architecture,
+            'mode': args.mode,
             'epochs': args.epochs,  # Always use the user-specified epochs
             'batch_size': args.batch_size,
             'learning_rate': args.learning_rate,
@@ -271,7 +272,8 @@ def main():
         }
         
         logger.info(f"Configuration: {config}")
-          # Step 1: Load and preprocess data
+        
+        # Step 1: Load and preprocess data
         logger.info("Step 1: Loading MNIST dataset...")
         data_loader = MNISTDataLoader()
         
@@ -299,14 +301,17 @@ def main():
         
         # Step 3: Train model
         logger.info("Step 3: Training the model...")
-        trainer = train_model(model, X_train, y_train, X_val, y_val, config)        # Step 4: Evaluate model
+        trainer = train_model(model, X_train, y_train, X_val, y_val, config)
+        
+        # Step 4: Evaluate model
         logger.info("Step 4: Evaluating the model...")
         metrics, predictions = evaluate_model(model, X_test, y_test)
         
         # Step 5: Save model and results
         logger.info("Step 5: Saving model and results...")
         model_path, results_path = save_model_and_results(model, trainer, metrics, config, timestamp)
-          # Step 6: Create visualizations
+        
+        # Step 6: Create visualizations
         if not args.no_plots:
             logger.info("Step 6: Creating visualizations...")
             create_visualizations(trainer, X_test, y_test, predictions, save_plots=True, timestamp=timestamp)
