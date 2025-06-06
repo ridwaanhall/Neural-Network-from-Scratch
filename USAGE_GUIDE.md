@@ -132,9 +132,9 @@ The primary application that provides a complete end-to-end machine learning pip
 python apps/main.py                         # Full training with default settings
 
 # Architecture options
-python apps/main.py --architecture simple   # Quick 2-layer network
-python apps/main.py --architecture default  # Balanced 3-layer network (default)
-python apps/main.py --architecture deep     # Deep 4-layer network for maximum accuracy
+python apps/main.py --arch simple   # Quick 2-layer network
+python apps/main.py --arch default  # Balanced 3-layer network (default)
+python apps/main.py --arch deep     # Deep 4-layer network for maximum accuracy
 
 # Training parameters
 python apps/main.py --epochs 100            # Custom epoch count
@@ -146,7 +146,7 @@ python apps/main.py --quick_test            # Reduced dataset for quick testing
 python apps/main.py --no_plots             # Skip visualization generation
 
 # Combined options for maximum performance
-python apps/main.py --architecture deep --epochs 50 --batch_size 128 --learning_rate 0.001
+python apps/main.py --arch deep --epochs 50 --batch_size 128 --learning_rate 0.001
 ```
 
 **Output Structure**: Creates `logs/run_main_YYYYMMDD_HHMMSS/` with complete pipeline visualizations and summary.
@@ -530,7 +530,7 @@ python -c "from src.data.data_loader import load_mnist_data; load_mnist_data()"
 python apps/main.py --batch_size 16
 
 # Use simple architecture
-python apps/main.py --architecture simple
+python apps/main.py --arch simple
 ```
 
 #### 4. Training Too Slow
