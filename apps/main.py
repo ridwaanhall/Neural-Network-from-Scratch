@@ -241,7 +241,7 @@ def create_visualizations(trainer, X_test, y_test, predictions, save_plots=True,
 def main():
     """Main execution function"""
     parser = argparse.ArgumentParser(description='MNIST Neural Network from Scratch')
-    parser.add_argument('--mode', choices=['simple', 'default', 'deep'], 
+    parser.add_argument('--arch', choices=['simple', 'default', 'deep'], 
                        default='default', help='Model architecture')
     parser.add_argument('--epochs', type=int, default=50, help='Number of training epochs')
     parser.add_argument('--batch_size', type=int, default=128, help='Batch size for training')
@@ -262,7 +262,7 @@ def main():
     try:
         # Configuration
         config = {
-            'mode': args.mode,
+            'arch': args.arch,
             'epochs': args.epochs,  # Always use the user-specified epochs
             'batch_size': args.batch_size,
             'learning_rate': args.learning_rate,
