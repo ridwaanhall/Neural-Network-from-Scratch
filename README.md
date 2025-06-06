@@ -174,20 +174,20 @@ python apps/main.py
 python apps/main.py --quick_test
 
 # Deep architecture for maximum accuracy
-python apps/main.py --architecture deep --epochs 100
+python apps/main.py --arch deep --epochs 100
 
 # Simple architecture for fast experimentation
-python apps/main.py --architecture simple --epochs 10
+python apps/main.py --arch simple --epochs 10
 
 # Production training without visualizations
-python apps/main.py --architecture deep --no_plots --epochs 200
+python apps/main.py --arch deep --no_plots --epochs 200
 ```
 
 **Available Options:**
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `--architecture` | choice | default | Predefined architecture: `simple`, `default`, `deep` |
+| `--arch` | choice | default | Predefined architecture: `simple`, `default`, `deep` |
 | `--epochs` | int | 50 | Number of training epochs |
 | `--batch_size` | int | 128 | Training batch size |
 | `--learning_rate` | float | 0.001 | Learning rate for optimization |
