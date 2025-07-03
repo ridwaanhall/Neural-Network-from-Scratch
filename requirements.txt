@@ -24,4 +24,4 @@ sympy==1.13.3
 torch==2.7.1+cpu
 torchvision==0.22.1+cpu
 typing_extensions==4.12.2
-urllib3==2.4.0
+urllib3==2.5.0
